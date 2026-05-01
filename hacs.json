@@ -1,0 +1,9 @@
+{
+  "name": "Neuro Modes",
+  "render_readme": true,
+  "file_name": "neuro_modes",
+  "domain": "neuro_modes",
+  "zip_release": false,
+  "hide_default_branch": false,
+  "iot_class": "Local Polling"
+}
