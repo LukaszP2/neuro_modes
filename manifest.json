@@ -1,0 +1,16 @@
+{
+  "domain": "neuro_modes",
+  "name": "Neuro Modes",
+  "version": "0.1.0",
+  "documentation": "https://github.com/LukaszP2/neuro_modes",
+  "issue_tracker": "https://github.com/LukaszP2/neuro_modes/issues",
+  "requirements": [],
+  "codeowners": ["@LukaszP2"],
+  "config_flow": true,
+  "iot_class": "local_push",
+  "integration_type": "hub",
+  "dependencies": [],
+  "homeassistant": "2024.4.0",
+  "loggers": ["custom_components.neuro_modes"],
+  "diagnostics": true
+}

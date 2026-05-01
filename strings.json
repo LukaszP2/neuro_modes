@@ -1,0 +1,115 @@
+{
+  "title": "Neuro Modes",
+  "config": {
+    "step": {
+      "user": {
+        "title": "Neuro Modes",
+        "menu_options": {
+          "setup_engine": "Instaluj Główny Silnik",
+          "setup_mode": "Dodaj Tryb Bazowy (np. Dom)",
+          "setup_modifier": "Dodaj Modyfikator (np. Noc)"
+        }
+      },
+      "setup_engine": {
+        "title": "Główny Silnik",
+        "description": "Czy chcesz zainstalować neuronowy silnik obliczeniowy?"
+      },
+      "setup_mode": {
+        "title": "Nowy Tryb Bazowy",
+        "data": {
+          "name": "Nazwa trybu",
+          "threshold": "Próg aktywacji (0-100)",
+          "delta": "Delta wyłączenia (Histereza)",
+          "override_timeout": "Czas nadpisania (min)"
+        }
+      },
+      "setup_modifier": {
+        "title": "Nowy Modyfikator",
+        "data": {
+          "name": "Nazwa modyfikatora",
+          "threshold": "Próg aktywacji (0-100)",
+          "delta": "Delta wyłączenia",
+          "override_timeout": "Czas nadpisania (min)"
+        }
+      }
+    },
+    "abort": {
+      "single_instance_allowed": "Silnik Neuro Modes jest już zainstalowany."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Zarządzanie Trybem",
+        "menu_options": {
+          "edit_settings": "Ustawienia ogólne (Nazwa/Progi)",
+          "manage_sources": "Zarządzaj poszlakami (Encje)",
+          "select_template": "✨ Zastosuj inteligentny szablon"
+        }
+      },
+      "edit_settings": {
+        "title": "Edycja parametrów",
+        "data": {
+          "name": "Nazwa",
+          "threshold": "Próg aktywacji",
+          "delta": "Delta",
+          "override_timeout": "Timeout (min)"
+        }
+      },
+      "manage_sources": {
+        "title": "Lista poszlak",
+        "description": "Wybierz poszlakę, aby ją edytować, lub dodaj nową.",
+        "data": {
+          "selected_source": "Wybierz akcję"
+        }
+      },
+      "add_source": {
+        "title": "Dodaj poszlakę",
+        "data": {
+          "entity_id": "Encja",
+          "state": "Stan aktywujący",
+          "weight": "Waga (pkt)"
+        }
+      },
+      "select_template": {
+        "title": "Wybierz Szablon",
+        "description": "UWAGA: Wybranie szablonu nadpisze Twoje obecne poszlaki dla tego trybu nową, inteligentną logiką.",
+        "menu_options": {
+          "template_work": "💼 Praca Zdalna (Home Office)",
+          "template_guests": "🥂 Goście w domu",
+          "template_vacation": "🏖️ Wakacje (Długa nieobecność)"
+        }
+      },
+      "template_work": {
+        "title": "Szablon: Praca Zdalna",
+        "data": {
+          "workday_entity": "Sensor dni pracujących",
+          "user_entity": "Kto pracuje? (Person)",
+          "other_people": "Kto przerywa pracę? (Blokada)",
+          "start_hour": "Od godziny",
+          "end_hour": "Do godziny"
+        }
+      },
+      "template_guests": {
+        "title": "Szablon: Goście",
+        "data": {
+          "guest_wifi": "Encja Wi-Fi dla gości",
+          "public_areas": "Strefy publiczne (Magic Areas)"
+        }
+      },
+      "template_vacation": {
+        "title": "Szablon: Wakacje",
+        "data": {
+          "alarm_entity": "System Alarmowy",
+          "presence_entity": "Główny domownik",
+          "min_days": "Minimalna ilość dni"
+        }
+      },
+      "edit_source_menu": { "title": "Zarządzaj: {source}", "data": { "action": "Akcja" } }
+    },
+    "abort": {
+      "engine_no_options": "Silnik nie posiada dodatkowych opcji.",
+      "not_implemented_yet": "Ta funkcja będzie dostępna wkrótce."
+    }
+  }
+}

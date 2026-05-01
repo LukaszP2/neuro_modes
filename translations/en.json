@@ -1,0 +1,69 @@
+{
+  "title": "Neuro Modes",
+  "config": {
+    "step": {
+      "user": {
+        "title": "Inicjalizacja Neuro Modes",
+        "menu_options": {
+          "setup_engine": "Instaluj Główny Silnik",
+          "setup_mode": "Dodaj Tryb Bazowy",
+          "setup_modifier": "Dodaj Modyfikator"
+        }
+      },
+      "setup_engine": { "title": "Główny Silnik" },
+      "setup_mode": { 
+        "title": "Nowy Tryb Bazowy",
+        "data": { 
+          "name": "Nazwa", 
+          "threshold": "Próg aktywacji %", 
+          "delta": "Delta wyłączenia %",
+          "override_timeout": "Czas nadpisania (min)"
+        } 
+      },
+      "setup_modifier": { 
+        "title": "Nowy Modyfikator",
+        "data": { 
+          "name": "Nazwa", 
+          "threshold": "Próg aktywacji %", 
+          "delta": "Delta wyłączenia %",
+          "override_timeout": "Czas nadpisania (min)"
+        } 
+      }
+    },
+    "abort": { "single_instance_allowed": "Silnik już istnieje." }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Zarządzanie Trybem",
+        "menu_options": {
+          "edit_settings": "Edytuj parametry (Nazwa, Progi)",
+          "add_source": "Dodaj / Edytuj poszlakę",
+          "remove_source": "Usuń poszlakę"
+        }
+      },
+      "edit_settings": {
+        "title": "Ustawienia trybu",
+        "data": {
+          "name": "Nowa nazwa",
+          "threshold": "Próg aktywacji %",
+          "delta": "Delta %",
+          "override_timeout": "Timeout nadpisania (min)"
+        }
+      },
+      "add_source": {
+        "title": "Konfiguracja poszlaki",
+        "data": {
+          "entity_id": "Encja z HA",
+          "state": "Stan (np. on, home)",
+          "weight": "Waga %"
+        }
+      },
+      "remove_source": {
+        "title": "Usuwanie poszlak",
+        "data": { "entity_ids": "Wybierz poszlaki" }
+      }
+    },
+    "abort": { "engine_no_options": "Brak opcji dla silnika.", "no_sources": "Brak poszlak." }
+  }
+}

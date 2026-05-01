@@ -1,0 +1,157 @@
+{
+  "title": "Neuro Modes",
+  "config": {
+    "step": {
+      "user": {
+        "title": "Neuro Modes",
+        "menu_options": {
+          "setup_engine": "Instaluj Silnik (Mózg)",
+          "setup_mode": "Dodaj Tryb Bazowy",
+          "setup_modifier": "Dodaj Modyfikator"
+        }
+      },
+      "setup_engine": { "title": "Instalacja Silnika" },
+      "setup_mode": {
+        "title": "Nowy Tryb Bazowy",
+        "data": {
+          "name": "Nazwa trybu",
+          "threshold": "Próg aktywacji (0-100)",
+          "delta": "Delta wyłączenia",
+          "override_timeout": "Czas nadpisania (min)"
+        }
+      },
+      "setup_modifier": {
+        "title": "Nowy Modyfikator",
+        "data": {
+          "name": "Nazwa modyfikatora",
+          "threshold": "Próg aktywacji (0-100)",
+          "delta": "Delta wyłączenia",
+          "override_timeout": "Czas nadpisania (min)"
+        }
+      }
+    },
+    "abort": { "single_instance_allowed": "Silnik jest już zainstalowany." }
+  },
+"options": {
+    "error": {
+      "duplicate_person": "Błąd: Ta sama osoba nie może być jednocześnie dzieckiem i rodzicem!"
+    },
+    "step": {
+
+      "edit_source_form": {
+        "title": "Edycja: {source}",
+        "data": { "state": "Stan aktywujący", "weight": "Waga (pkt)" }
+      },
+      "init": {
+        "title": "Zarządzanie",
+        "menu_options": {
+          "edit_settings": "Ustawienia parametrów",
+          "manage_sources": "Zarządzaj poszlakami",
+          "select_template": "✨ Zastosuj szablon"
+        }
+      },
+      "edit_settings": {
+        "title": "Edycja parametrów",
+        "data": {
+          "name": "Nazwa",
+          "threshold": "Próg aktywacji",
+          "delta": "Delta",
+          "override_timeout": "Timeout (min)"
+        }
+      },
+      "edit_source_menu": {
+        "title": "Zarządzanie poszlaką",
+        "data": { "action": "Wybierz akcję" },
+        "description": "Wybrana encja: **{source}**\n\nWybierz, co chcesz z nią zrobić:",
+        "menu_options": {
+          "edit_source_form": "✏️ Edytuj stan i wagę",
+          "delete_source_action": "🗑️ Usuń poszlakę",
+          "manage_sources": "⬅️ WSTECZ"
+        }
+      },
+      "delete_source_action": {
+        "title": "⚠️ Potwierdzenie usunięcia",
+        "description": "Czy na pewno chcesz bezpowrotnie usunąć poszlakę **{source}** z tego trybu?",
+        "submit": "Dalej",
+        "data": { "confirm": "Wybierz akcję:" }
+      },
+      "manage_sources": {
+        "title": "Lista poszlak",
+        "data": { "selected_source": "Wybierz poszlakę z listy:" }
+      },
+      "add_source": {
+        "title": "Nowa poszlaka",
+        "data": { "entity_id": "Encja", "state": "Stan (np. on, home)", "weight": "Waga (pkt)" }
+      },
+      "select_template": {
+        "title": "Wybierz Szablon",
+        "description": "UWAGA: Szablon nadpisze obecne poszlaki dla tego trybu.",
+        "menu_options": {
+          "template_home": "🏠 Dom",
+          "template_away": "🚗 Poza Domem",
+          "template_night": "🌙 Noc",
+          "template_cinema": "🍿 Filmowy",
+          "template_alarm": "🚨 Alarm",
+          "template_work": "💼 Praca Zdalna",
+          "template_guests": "🥂 Goście",
+          "template_vacation": "🏖️ Wakacje",
+          "template_children": "🧸 Dzieci same w domu",
+          "init": "⬅️ WSTECZ"
+        }
+      },
+
+      "confirm_template": {
+        "title": "⚠️ UWAGA: NADPISYWANIE DANYCH",
+        "description": "Wygenerowanie nowego szablonu bezpowrotnie usunie wszystkie obecne poszlaki, które ustawiłeś dla tego trybu, i zastąpi je nowymi. \n\nCzy jesteś tego w 100% pewien?",
+        "submit": "TAK, SKASUJ I NADPISZ"
+      },
+      "template_work": {
+        "title": "Szablon: Praca Zdalna",
+        "data": { "workday_entity": "Sensor dni roboczych", "user_entity": "Kto pracuje?", "other_people": "Kto przerywa pracę?", "start_hour": "Od", "end_hour": "Do" }
+      },
+      "template_guests": {
+        "title": "Szablon: Goście",
+        "data": { "guest_wifi": "Wi-Fi gości", "public_areas": "Strefy publiczne (Magic Areas)" }
+      },
+      "template_vacation": {
+        "title": "Szablon: Wakacje",
+        "data": { "alarm_entity": "Alarm", "presence_entity": "Główny domownik", "min_days": "Min. dni" }
+      },
+      "template_children": {
+        "title": "Szablon: Dzieci",
+        "description": "Tryb aktywuje się, gdy co najmniej jedno dziecko jest w domu, a wszyscy rodzice wyszli.",
+        "data": { "children_entities": "Wybierz Dzieci", "parent_entities": "Wybierz Rodziców (Blokada)" }
+      },
+      "template_home": {
+        "title": "Szablon: Dom",
+        "description": "⚠️ UWAGA: Użycie tego szablonu usunie wszystkie obecne poszlaki dla tego trybu!\n\nZaznacz główną strefę domową.",
+        "submit": "TAK, SKASUJ I NADPISZ",
+        "data": { "home_zone": "Strefa domowa" }
+      },
+      "template_away": {
+        "title": "Szablon: Poza domem",
+        "description": "⚠️ UWAGA: Obecne poszlaki zostaną skasowane!\n\nZaznacz strefę domową.",
+        "submit": "TAK, SKASUJ I NADPISZ",
+        "data": { "home_zone": "Strefa domowa" }
+      },
+      "template_night": {
+        "title": "Szablon: Noc",
+        "description": "⚠️ UWAGA: Zapisanie tego formularza nadpisze obecne poszlaki tego trybu!",
+        "submit": "TAK, SKASUJ I NADPISZ",
+        "data": { "sun_entity": "Sensor słońca", "chargers": "Opcjonalnie: Ładowarki telefonów" }
+      },
+      "template_cinema": {
+        "title": "Szablon: Filmowy",
+        "description": "⚠️ UWAGA: Zapisanie tego formularza nadpisze obecne poszlaki!",
+        "submit": "TAK, SKASUJ I NADPISZ",
+        "data": { "tv_entity": "Telewizor (Media Player)", "lights": "Opcjonalnie: Światła, które mają być zgaszone" }
+      },
+      "template_alarm": {
+        "title": "Szablon: Alarm",
+        "description": "⚠️ UWAGA: Skasujesz obecne poszlaki i wstawisz nową logikę!",
+        "submit": "TAK, SKASUJ I NADPISZ",
+        "data": { "alarm_entity": "Główny panel alarmowy" }
+      }
+    }
+  }
+}
