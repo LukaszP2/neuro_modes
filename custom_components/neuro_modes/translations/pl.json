@@ -17,7 +17,8 @@
           "name": "Nazwa trybu",
           "threshold": "Próg aktywacji (0-100)",
           "delta": "Delta wyłączenia",
-          "override_timeout": "Czas nadpisania (min)"
+          "override_timeout": "Czas nadpisania (min)",
+          "install_defaults": "Wygeneruj automatycznie pakiet trybów startowych (Dom, Poza domem, Noc, Wakacje, Filmowy)"
         }
       },
       "setup_modifier": {

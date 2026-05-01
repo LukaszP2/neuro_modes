@@ -24,7 +24,28 @@ class NeuroModesConfigFlow(config_entries.ConfigFlow, domain=DOMAIN): # type: ig
     VERSION = 1
 
     async def async_step_user(self, user_input=None):
-        return self.async_show_menu(step_id="user", menu_options=["setup_engine", "setup_mode", "setup_modifier"])
+        """Główny punkt wejścia do konfiguracji."""
+        # Sprawdzamy, czy silnik jest już zainstalowany
+        engine_exists = any(
+            entry.data.get(CONF_ENTRY_TYPE) == ENTRY_TYPE_ENGINE
+            for entry in self._async_current_entries()
+        )
+
+        if not engine_exists:
+            # Jeśli nie ma silnika, omijamy menu i od razu wymuszamy jego instalację
+            return await self.async_step_setup_engine()
+        else:
+            # Jeśli silnik jest, pokazujemy tylko dodawanie trybów i modyfikatorów
+            return self.async_show_menu(
+                step_id="user", 
+                menu_options=["setup_mode", "setup_modifier"]
+            )
+
+    async def async_step_import(self, user_input=None):
+        """Specjalny krok do cichego generowania trybów domyślnych w tle."""
+        if user_input is not None:
+            return self.async_create_entry(title=user_input["title"], data=user_input["data"])
+        return self.async_abort(reason="unknown")
 
     async def async_step_setup_engine(self, user_input=None):
         return await async_step_setup_engine(self, user_input)
@@ -73,16 +94,19 @@ class NeuroModesOptionsFlow(config_entries.OptionsFlow):
         return self.async_show_menu(
             step_id="select_template",
             menu_options=[
+                # --- TRYBY BAZOWE (Hierarchia ważności) ---
                 "template_home", 
                 "template_away", 
-                "template_night", 
-                "template_cinema", 
-                "template_alarm", 
-                "template_work", 
-                "template_guests", 
                 "template_vacation", 
+                # --- MODYFIKATORY (Alfabetycznie) ---
+                "template_alarm", 
                 "template_children",
-                "init"  # Magiczny guzik Wstecz (cofa do menu init)
+                "template_cinema", 
+                "template_guests", 
+                "template_night", 
+                "template_work", 
+                # --- AKCJE ---
+                "init"  # Magiczny guzik Wstecz
             ]
         )
 

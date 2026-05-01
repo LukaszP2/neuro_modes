@@ -1,5 +1,5 @@
 import voluptuous as vol
-from homeassistant.helpers import selector
+from homeassistant import config_entries
 from ..const import (
     DOMAIN, 
     CONF_ENTRY_TYPE, 
@@ -9,24 +9,45 @@ from ..const import (
     CONF_NAME, 
     CONF_THRESHOLD, 
     CONF_DELTA, 
-    CONF_SOURCES, 
-    CONF_OVERRIDE_TIMEOUT
+    CONF_OVERRIDE_TIMEOUT,
+    CONF_SOURCES
 )
 
 async def async_step_setup_engine(flow, user_input=None):
-    """Krok instalacji głównego silnika Neuro Modes."""
-    # Sprawdzamy czy silnik już istnieje
-    for entry in flow._async_current_entries():
-        if entry.data.get(CONF_ENTRY_TYPE) == ENTRY_TYPE_ENGINE:
-            return flow.async_abort(reason="single_instance_allowed")
-
+    """Krok instalacji głównego silnika z opcją paczki startowej."""
+    
     if user_input is not None:
+        if user_input.get("install_defaults"):
+            # Automatyczne strzelanie templatkami!
+            defaults = [
+                {"title": "Mode: Dom", "data": {CONF_ENTRY_TYPE: ENTRY_TYPE_MODE, CONF_NAME: "Dom", CONF_THRESHOLD: 70, CONF_DELTA: 20, CONF_OVERRIDE_TIMEOUT: 120, CONF_SOURCES: [{"entity_id": "zone.home", "state": "> 0", "weight": 80}]}},
+                {"title": "Mode: Poza domem", "data": {CONF_ENTRY_TYPE: ENTRY_TYPE_MODE, CONF_NAME: "Poza domem", CONF_THRESHOLD: 70, CONF_DELTA: 20, CONF_OVERRIDE_TIMEOUT: 120, CONF_SOURCES: [{"entity_id": "zone.home", "state": "0", "weight": 80}]}},
+                {"title": "Mode: Noc", "data": {CONF_ENTRY_TYPE: ENTRY_TYPE_MODE, CONF_NAME: "Noc", CONF_THRESHOLD: 70, CONF_DELTA: 20, CONF_OVERRIDE_TIMEOUT: 120, CONF_SOURCES: [{"entity_id": "sun.sun", "state": "below_horizon", "weight": 40}]}},
+                {"title": "Mode: Wakacje", "data": {CONF_ENTRY_TYPE: ENTRY_TYPE_MODE, CONF_NAME: "Wakacje", CONF_THRESHOLD: 70, CONF_DELTA: 20, CONF_OVERRIDE_TIMEOUT: 1440, CONF_SOURCES: [{"entity_id": "zone.home", "state": "0", "weight": 40}]}},
+                {"title": "Mode: Filmowy", "data": {CONF_ENTRY_TYPE: ENTRY_TYPE_MODE, CONF_NAME: "Filmowy", CONF_THRESHOLD: 70, CONF_DELTA: 20, CONF_OVERRIDE_TIMEOUT: 120, CONF_SOURCES: []}}, # Filmowy pusty, uczy się po konfiguracji TV
+            ]
+            
+            for mode in defaults:
+                # Ciche wywoływanie flow 'import' dla każdego z trybów
+                flow.hass.async_create_task(
+                    flow.hass.config_entries.flow.async_init(
+                        DOMAIN,
+                        context={"source": config_entries.SOURCE_IMPORT},
+                        data=mode
+                    )
+                )
+
         return flow.async_create_entry(
-            title="Engine Neuro Modes", 
+            title="Neuro Modes: Engine", 
             data={CONF_ENTRY_TYPE: ENTRY_TYPE_ENGINE}
         )
 
-    return flow.async_show_form(step_id="setup_engine", data_schema=vol.Schema({}))
+    return flow.async_show_form(
+        step_id="setup_engine", 
+        data_schema=vol.Schema({
+            vol.Optional("install_defaults", default=True): bool
+        })
+    )
 
 async def async_step_setup_mode(flow, user_input=None):
     """Krok tworzenia nowego Trybu Bazowego (np. Dom, Poza)."""

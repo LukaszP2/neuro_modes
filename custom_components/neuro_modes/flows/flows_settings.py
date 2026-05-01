@@ -13,7 +13,14 @@ async def async_step_edit_settings(flow, user_input=None):
             title=f"{prefix}: {user_input['name']}", 
             data=new_data
         )
-        return flow.async_create_entry(title="", data={})
+        # Aktualizujemy główny tytuł integracji i dane wewnątrz
+        flow.hass.config_entries.async_update_entry(
+            flow._entry, 
+            title=f"{prefix}: {user_input['name']}", 
+            data=new_data
+        )
+        # NAPRAWA: Zwracamy obecne opcje, żeby ich nie wykasowało!
+        return flow.async_create_entry(title="", data=flow._entry.options)
 
     return flow.async_show_form(
         step_id="edit_settings",
