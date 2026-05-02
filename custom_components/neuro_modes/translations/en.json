@@ -1,69 +1,206 @@
 {
   "title": "Neuro Modes",
+  "entity": {
+    "sensor": {
+      "confidence": {
+        "name": "Confidence"
+      }
+    },
+    "switch": {
+      "state": {
+        "name": "State"
+      }
+    },
+    "select": {
+      "home_mode": {
+        "name": "Home mode"
+      }
+    }
+  },
   "config": {
     "step": {
       "user": {
-        "title": "Inicjalizacja Neuro Modes",
+        "title": "Neuro Modes",
         "menu_options": {
-          "setup_engine": "Instaluj Główny Silnik",
-          "setup_mode": "Dodaj Tryb Bazowy",
-          "setup_modifier": "Dodaj Modyfikator"
+          "setup_engine": "Install engine",
+          "setup_mode": "Add base mode",
+          "setup_modifier": "Add modifier"
         }
       },
-      "setup_engine": { "title": "Główny Silnik" },
-      "setup_mode": { 
-        "title": "Nowy Tryb Bazowy",
-        "data": { 
-          "name": "Nazwa", 
-          "threshold": "Próg aktywacji %", 
-          "delta": "Delta wyłączenia %",
-          "override_timeout": "Czas nadpisania (min)"
-        } 
+      "setup_engine": {
+        "title": "Engine setup",
+        "data": {
+          "install_defaults": "Create default starter modes"
+        }
       },
-      "setup_modifier": { 
-        "title": "Nowy Modyfikator",
-        "data": { 
-          "name": "Nazwa", 
-          "threshold": "Próg aktywacji %", 
-          "delta": "Delta wyłączenia %",
-          "override_timeout": "Czas nadpisania (min)"
-        } 
+      "setup_mode": {
+        "title": "New base mode",
+        "data": {
+          "name": "Mode name",
+          "threshold": "Activation threshold (0-100)",
+          "delta": "Deactivation delta (hysteresis)",
+          "override_timeout": "Manual override timeout (min)"
+        }
+      },
+      "setup_modifier": {
+        "title": "New modifier",
+        "data": {
+          "name": "Modifier name",
+          "threshold": "Activation threshold (0-100)",
+          "delta": "Deactivation delta",
+          "override_timeout": "Manual override timeout (min)"
+        }
       }
     },
-    "abort": { "single_instance_allowed": "Silnik już istnieje." }
+    "abort": {
+      "single_instance_allowed": "Neuro Modes engine is already installed."
+    }
   },
   "options": {
+    "error": {
+      "duplicate_person": "The same person cannot be both a child and a parent."
+    },
     "step": {
       "init": {
-        "title": "Zarządzanie Trybem",
+        "title": "Mode management",
         "menu_options": {
-          "edit_settings": "Edytuj parametry (Nazwa, Progi)",
-          "add_source": "Dodaj / Edytuj poszlakę",
-          "remove_source": "Usuń poszlakę"
+          "edit_settings": "Edit settings",
+          "manage_sources": "Manage sources",
+          "select_template": "Apply template"
         }
       },
       "edit_settings": {
-        "title": "Ustawienia trybu",
+        "title": "Edit settings",
         "data": {
-          "name": "Nowa nazwa",
-          "threshold": "Próg aktywacji %",
-          "delta": "Delta %",
-          "override_timeout": "Timeout nadpisania (min)"
+          "name": "Name",
+          "threshold": "Activation threshold",
+          "delta": "Delta",
+          "override_timeout": "Timeout (min)"
+        }
+      },
+      "manage_sources": {
+        "title": "Sources",
+        "data": {
+          "selected_source": "Select source or action"
         }
       },
       "add_source": {
-        "title": "Konfiguracja poszlaki",
+        "title": "Add source",
         "data": {
-          "entity_id": "Encja z HA",
-          "state": "Stan (np. on, home)",
-          "weight": "Waga %"
+          "entity_id": "Entity",
+          "state": "Expected state",
+          "weight": "Weight (points)"
         }
       },
-      "remove_source": {
-        "title": "Usuwanie poszlak",
-        "data": { "entity_ids": "Wybierz poszlaki" }
+      "edit_source_form": {
+        "title": "Edit source",
+        "description": "Selected source: {source}",
+        "data": {
+          "state": "Expected state",
+          "weight": "Weight (points)"
+        }
+      },
+      "edit_source_menu": {
+        "title": "Manage source",
+        "description": "Selected source: {source}",
+        "data": {
+          "action": "Action"
+        },
+        "menu_options": {
+          "edit_source_form": "Edit state and weight",
+          "delete_source_action": "Delete source",
+          "manage_sources": "Back"
+        }
+      },
+      "delete_source_action": {
+        "title": "Confirm deletion",
+        "description": "Do you want to remove source: {source}?",
+        "data": {
+          "confirm": "Confirm"
+        }
+      },
+      "select_template": {
+        "title": "Select template",
+        "description": "Selecting a template will replace current sources for this mode.",
+        "menu_options": {
+          "template_home": "Home",
+          "template_away": "Away",
+          "template_vacation": "Vacation",
+          "template_alarm": "Alarm",
+          "template_children": "Children",
+          "template_cinema": "Cinema",
+          "template_guests": "Guests",
+          "template_night": "Night",
+          "template_work": "Work from home",
+          "init": "Back"
+        }
+      },
+      "template_home": {
+        "title": "Template: Home",
+        "data": {
+          "home_zone": "Home zone"
+        }
+      },
+      "template_away": {
+        "title": "Template: Away",
+        "data": {
+          "home_zone": "Home zone"
+        }
+      },
+      "template_night": {
+        "title": "Template: Night",
+        "data": {
+          "sun_entity": "Sun entity",
+          "chargers": "Optional chargers"
+        }
+      },
+      "template_cinema": {
+        "title": "Template: Cinema",
+        "data": {
+          "tv_entity": "TV media player",
+          "lights": "Optional lights"
+        }
+      },
+      "template_alarm": {
+        "title": "Template: Alarm",
+        "data": {
+          "alarm_entity": "Alarm panel"
+        }
+      },
+      "template_work": {
+        "title": "Template: Work from home",
+        "data": {
+          "workers": "Workers",
+          "activity_sensors": "Optional activity sensors",
+          "disruptors": "Optional disruptors"
+        }
+      },
+      "template_guests": {
+        "title": "Template: Guests",
+        "data": {
+          "guest_wifi": "Guest Wi-Fi entity",
+          "public_areas": "Public area sensors"
+        }
+      },
+      "template_vacation": {
+        "title": "Template: Vacation",
+        "data": {
+          "home_zone": "Home zone",
+          "alarm_entity": "Optional alarm panel",
+          "min_hours": "Minimum hours"
+        }
+      },
+      "template_children": {
+        "title": "Template: Children",
+        "data": {
+          "children_entities": "Children",
+          "parent_entities": "Parents"
+        }
       }
     },
-    "abort": { "engine_no_options": "Brak opcji dla silnika.", "no_sources": "Brak poszlak." }
+    "abort": {
+      "engine_no_options": "Engine has no options.",
+      "not_implemented_yet": "This feature is not implemented yet."
+    }
   }
 }

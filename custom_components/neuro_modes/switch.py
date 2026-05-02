@@ -10,11 +10,11 @@ async def async_setup_entry(hass, entry, async_add_entities):
 
 class NeuroModeSwitch(SwitchEntity):
     _attr_has_entity_name = True
+    _attr_translation_key = "state"
 
     def __init__(self, coordinator):
         self.coordinator = coordinator
         self._name = coordinator.entry.data.get(CONF_NAME)
-        self._attr_name = "Stan"
         self._attr_unique_id = f"{coordinator.entry.entry_id}_state"
 
     @property
@@ -35,12 +35,11 @@ class NeuroModeSwitch(SwitchEntity):
         
     @property
     def extra_state_attributes(self):
-        """POPRAWKA: Przywrócone atrybuty statystyczne dla XAI."""
         data = self.coordinator.engine.states.get(self._name, {})
         return {
-            "Pewność systemu": f"{data.get('confidence', 0)}%",
-            "Ręczne nadpisanie": "Aktywne" if data.get('human_override') else "Brak",
-            "Aktywne poszlaki": data.get("active", [])
+            "system_confidence": data.get("confidence", 0),
+            "human_override": data.get("human_override", False),
+            "active_sources": data.get("active", []),
         }
 
     async def async_turn_on(self, **kwargs):

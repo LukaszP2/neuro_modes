@@ -22,7 +22,7 @@ class NeuroSourceBinarySensor(BinarySensorEntity):
         self.coordinator = coordinator
         self._source = source
         self._name = coordinator.entry.data.get(CONF_NAME)
-        self._attr_name = f"Poszlaka: {source['entity_id']}"
+        self._attr_name = source["entity_id"]
         self._attr_unique_id = f"{coordinator.entry.entry_id}_source_{index}_{source['entity_id']}"
 
     @property
@@ -41,10 +41,9 @@ class NeuroSourceBinarySensor(BinarySensorEntity):
 
     @property
     def extra_state_attributes(self):
-        """Eksport wag i stanów do UI."""
         return {
-            "oczekiwany_stan": self._source.get("state"),
-            "waga_punktowa": f"{self._source.get('weight')}%"
+            "expected_state": self._source.get("state"),
+            "weight_points": self._source.get("weight"),
         }
 
     async def async_added_to_hass(self):

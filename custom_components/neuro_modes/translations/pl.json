@@ -1,58 +1,76 @@
 {
   "title": "Neuro Modes",
+  "entity": {
+    "sensor": {
+      "confidence": {
+        "name": "Pewność"
+      }
+    },
+    "switch": {
+      "state": {
+        "name": "Stan"
+      }
+    },
+    "select": {
+      "home_mode": {
+        "name": "Tryb domu"
+      }
+    }
+  },
   "config": {
     "step": {
       "user": {
         "title": "Neuro Modes",
         "menu_options": {
-          "setup_engine": "Instaluj Silnik (Mózg)",
-          "setup_mode": "Dodaj Tryb Bazowy",
-          "setup_modifier": "Dodaj Modyfikator"
+          "setup_engine": "Zainstaluj silnik",
+          "setup_mode": "Dodaj tryb bazowy",
+          "setup_modifier": "Dodaj modyfikator"
         }
       },
-      "setup_engine": { "title": "Instalacja Silnika" },
+      "setup_engine": {
+        "title": "Konfiguracja silnika",
+        "data": {
+          "install_defaults": "Utwórz domyślne tryby startowe"
+        }
+      },
       "setup_mode": {
-        "title": "Nowy Tryb Bazowy",
+        "title": "Nowy tryb bazowy",
         "data": {
           "name": "Nazwa trybu",
           "threshold": "Próg aktywacji (0-100)",
-          "delta": "Delta wyłączenia",
-          "override_timeout": "Czas nadpisania (min)",
-          "install_defaults": "Wygeneruj automatycznie pakiet trybów startowych (Dom, Poza domem, Noc, Wakacje, Filmowy)"
+          "delta": "Delta wyłączenia (histereza)",
+          "override_timeout": "Timeout ręcznego nadpisania (min)"
         }
       },
       "setup_modifier": {
-        "title": "Nowy Modyfikator",
+        "title": "Nowy modyfikator",
         "data": {
           "name": "Nazwa modyfikatora",
           "threshold": "Próg aktywacji (0-100)",
           "delta": "Delta wyłączenia",
-          "override_timeout": "Czas nadpisania (min)"
+          "override_timeout": "Timeout ręcznego nadpisania (min)"
         }
       }
     },
-    "abort": { "single_instance_allowed": "Silnik jest już zainstalowany." }
+    "abort": {
+      "single_instance_allowed": "Silnik Neuro Modes jest już zainstalowany."
+    }
   },
-"options": {
+  "options": {
     "error": {
-      "duplicate_person": "Błąd: Ta sama osoba nie może być jednocześnie dzieckiem i rodzicem!"
+      "duplicate_person": "Ta sama osoba nie może być jednocześnie dzieckiem i rodzicem."
     },
     "step": {
-
-      "edit_source_form": {
-        "title": "Edycja: {source}",
-        "data": { "state": "Stan aktywujący", "weight": "Waga (pkt)" }
-      },
       "init": {
-        "title": "Zarządzanie",
+        "title": "Zarządzanie trybem",
         "menu_options": {
-          "edit_settings": "Ustawienia parametrów",
-          "manage_sources": "Zarządzaj poszlakami",
-          "select_template": "✨ Zastosuj szablon"
+          "edit_settings": "Edytuj ustawienia",
+          "manage_sources": "Zarządzaj źródłami",
+          "select_template": "Zastosuj szablon"
         }
       },
       "edit_settings": {
-        "title": "Edycja parametrów",
+        "title": "Edytuj ustawienia",
         "data": {
           "name": "Nazwa",
           "threshold": "Próg aktywacji",
@@ -60,99 +78,129 @@
           "override_timeout": "Timeout (min)"
         }
       },
+      "manage_sources": {
+        "title": "Źródła",
+        "data": {
+          "selected_source": "Wybierz źródło lub akcję"
+        }
+      },
+      "add_source": {
+        "title": "Dodaj źródło",
+        "data": {
+          "entity_id": "Encja",
+          "state": "Oczekiwany stan",
+          "weight": "Waga (punkty)"
+        }
+      },
+      "edit_source_form": {
+        "title": "Edytuj źródło",
+        "description": "Wybrane źródło: {source}",
+        "data": {
+          "state": "Oczekiwany stan",
+          "weight": "Waga (punkty)"
+        }
+      },
       "edit_source_menu": {
-        "title": "Zarządzanie poszlaką",
-        "data": { "action": "Wybierz akcję" },
-        "description": "Wybrana encja: **{source}**\n\nWybierz, co chcesz z nią zrobić:",
+        "title": "Zarządzaj źródłem",
+        "description": "Wybrane źródło: {source}",
+        "data": {
+          "action": "Akcja"
+        },
         "menu_options": {
-          "edit_source_form": "✏️ Edytuj stan i wagę",
-          "delete_source_action": "🗑️ Usuń poszlakę",
-          "manage_sources": "⬅️ WSTECZ"
+          "edit_source_form": "Edytuj stan i wagę",
+          "delete_source_action": "Usuń źródło",
+          "manage_sources": "Wstecz"
         }
       },
       "delete_source_action": {
-        "title": "⚠️ Potwierdzenie usunięcia",
-        "description": "Czy na pewno chcesz bezpowrotnie usunąć poszlakę **{source}** z tego trybu?",
-        "submit": "Dalej",
-        "data": { "confirm": "Wybierz akcję:" }
-      },
-      "manage_sources": {
-        "title": "Lista poszlak",
-        "data": { "selected_source": "Wybierz poszlakę z listy:" }
-      },
-      "add_source": {
-        "title": "Nowa poszlaka",
-        "data": { "entity_id": "Encja", "state": "Stan (np. on, home)", "weight": "Waga (pkt)" }
-      },
-      "select_template": {
-        "title": "Wybierz Szablon",
-        "description": "UWAGA: Szablon nadpisze obecne poszlaki dla tego trybu.",
-        "menu_options": {
-          "template_home": "🏠 Dom",
-          "template_away": "🚗 Poza Domem",
-          "template_night": "🌙 Noc",
-          "template_cinema": "🍿 Filmowy",
-          "template_alarm": "🚨 Alarm",
-          "template_work": "💼 Praca Zdalna",
-          "template_guests": "🥂 Goście",
-          "template_vacation": "🏖️ Wakacje",
-          "template_children": "🧸 Dzieci same w domu",
-          "init": "⬅️ WSTECZ"
+        "title": "Potwierdzenie usunięcia",
+        "description": "Czy chcesz usunąć źródło: {source}?",
+        "data": {
+          "confirm": "Potwierdź"
         }
       },
-
-      "confirm_template": {
-        "title": "⚠️ UWAGA: NADPISYWANIE DANYCH",
-        "description": "Wygenerowanie nowego szablonu bezpowrotnie usunie wszystkie obecne poszlaki, które ustawiłeś dla tego trybu, i zastąpi je nowymi. \n\nCzy jesteś tego w 100% pewien?",
-        "submit": "TAK, SKASUJ I NADPISZ"
-      },
-      "template_work": {
-        "title": "Szablon: Praca Zdalna",
-        "data": { "workday_entity": "Sensor dni roboczych", "user_entity": "Kto pracuje?", "other_people": "Kto przerywa pracę?", "start_hour": "Od", "end_hour": "Do" }
-      },
-      "template_guests": {
-        "title": "Szablon: Goście",
-        "data": { "guest_wifi": "Wi-Fi gości", "public_areas": "Strefy publiczne (Magic Areas)" }
-      },
-      "template_vacation": {
-        "title": "Szablon: Wakacje",
-        "data": { "alarm_entity": "Alarm", "presence_entity": "Główny domownik", "min_days": "Min. dni" }
-      },
-      "template_children": {
-        "title": "Szablon: Dzieci",
-        "description": "Tryb aktywuje się, gdy co najmniej jedno dziecko jest w domu, a wszyscy rodzice wyszli.",
-        "data": { "children_entities": "Wybierz Dzieci", "parent_entities": "Wybierz Rodziców (Blokada)" }
+      "select_template": {
+        "title": "Wybierz szablon",
+        "description": "Wybranie szablonu zastąpi obecne źródła dla tego trybu.",
+        "menu_options": {
+          "template_home": "Dom",
+          "template_away": "Poza domem",
+          "template_vacation": "Wakacje",
+          "template_alarm": "Alarm",
+          "template_children": "Dzieci",
+          "template_cinema": "Kino",
+          "template_guests": "Goście",
+          "template_night": "Noc",
+          "template_work": "Praca z domu",
+          "init": "Wstecz"
+        }
       },
       "template_home": {
         "title": "Szablon: Dom",
-        "description": "⚠️ UWAGA: Użycie tego szablonu usunie wszystkie obecne poszlaki dla tego trybu!\n\nZaznacz główną strefę domową.",
-        "submit": "TAK, SKASUJ I NADPISZ",
-        "data": { "home_zone": "Strefa domowa" }
+        "data": {
+          "home_zone": "Strefa domu"
+        }
       },
       "template_away": {
         "title": "Szablon: Poza domem",
-        "description": "⚠️ UWAGA: Obecne poszlaki zostaną skasowane!\n\nZaznacz strefę domową.",
-        "submit": "TAK, SKASUJ I NADPISZ",
-        "data": { "home_zone": "Strefa domowa" }
+        "data": {
+          "home_zone": "Strefa domu"
+        }
       },
       "template_night": {
         "title": "Szablon: Noc",
-        "description": "⚠️ UWAGA: Zapisanie tego formularza nadpisze obecne poszlaki tego trybu!",
-        "submit": "TAK, SKASUJ I NADPISZ",
-        "data": { "sun_entity": "Sensor słońca", "chargers": "Opcjonalnie: Ładowarki telefonów" }
+        "data": {
+          "sun_entity": "Encja słońca",
+          "chargers": "Opcjonalne ładowarki"
+        }
       },
       "template_cinema": {
-        "title": "Szablon: Filmowy",
-        "description": "⚠️ UWAGA: Zapisanie tego formularza nadpisze obecne poszlaki!",
-        "submit": "TAK, SKASUJ I NADPISZ",
-        "data": { "tv_entity": "Telewizor (Media Player)", "lights": "Opcjonalnie: Światła, które mają być zgaszone" }
+        "title": "Szablon: Kino",
+        "data": {
+          "tv_entity": "Odtwarzacz TV",
+          "lights": "Opcjonalne światła"
+        }
       },
       "template_alarm": {
         "title": "Szablon: Alarm",
-        "description": "⚠️ UWAGA: Skasujesz obecne poszlaki i wstawisz nową logikę!",
-        "submit": "TAK, SKASUJ I NADPISZ",
-        "data": { "alarm_entity": "Główny panel alarmowy" }
+        "data": {
+          "alarm_entity": "Panel alarmowy"
+        }
+      },
+      "template_work": {
+        "title": "Szablon: Praca z domu",
+        "data": {
+          "workers": "Pracujące osoby",
+          "activity_sensors": "Opcjonalne sensory aktywności",
+          "disruptors": "Opcjonalne osoby zakłócające"
+        }
+      },
+      "template_guests": {
+        "title": "Szablon: Goście",
+        "data": {
+          "guest_wifi": "Encja Wi‑Fi gości",
+          "public_areas": "Sensory stref publicznych"
+        }
+      },
+      "template_vacation": {
+        "title": "Szablon: Wakacje",
+        "data": {
+          "home_zone": "Strefa domu",
+          "alarm_entity": "Opcjonalny panel alarmowy",
+          "min_hours": "Minimalna liczba godzin"
+        }
+      },
+      "template_children": {
+        "title": "Szablon: Dzieci",
+        "data": {
+          "children_entities": "Dzieci",
+          "parent_entities": "Rodzice"
+        }
       }
+    },
+    "abort": {
+      "engine_no_options": "Silnik nie ma opcji.",
+      "not_implemented_yet": "Ta funkcja nie jest jeszcze zaimplementowana."
     }
   }
 }

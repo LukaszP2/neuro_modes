@@ -1,6 +1,6 @@
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
-from .const import DOMAIN
+from .const import DOMAIN, CONF_ENTRY_TYPE, ENTRY_TYPE_ENGINE, ENTRY_TYPE_MODE
 from .engine import NeuroEngine
 from .coordinator import NeuroModesCoordinator
 
@@ -15,6 +15,15 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
     
     await coordinator.async_setup()
     hass.data[DOMAIN][entry.entry_id] = coordinator
+
+    # Jeśli dodano nowy tryb bazowy po silniku, odświeżamy koordynator silnika,
+    # aby selector trybu domu natychmiast zobaczył nową opcję.
+    if entry.data.get(CONF_ENTRY_TYPE) == ENTRY_TYPE_MODE:
+        for cfg_entry in hass.config_entries.async_entries(DOMAIN):
+            if cfg_entry.data.get(CONF_ENTRY_TYPE) == ENTRY_TYPE_ENGINE:
+                engine_coordinator = hass.data[DOMAIN].get(cfg_entry.entry_id)
+                if engine_coordinator is not None:
+                    engine_coordinator.async_set_updated_data(engine_coordinator.data)
     
     entry.async_on_unload(entry.add_update_listener(async_reload_entry))
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)

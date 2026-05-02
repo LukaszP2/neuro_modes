@@ -13,11 +13,11 @@ async def async_setup_entry(hass, entry, async_add_entities):
 class NeuroConfidence(SensorEntity):
     _attr_has_entity_name = True
     _attr_native_unit_of_measurement = "%"
+    _attr_translation_key = "confidence"
 
     def __init__(self, coordinator):
         self.coordinator = coordinator
         self._name = coordinator.entry.data.get(CONF_NAME)
-        self._attr_name = "Pewność"
         self._attr_unique_id = f"{coordinator.entry.entry_id}_conf_sensor"
 
     @property

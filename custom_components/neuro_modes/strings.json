@@ -1,115 +1,206 @@
 {
   "title": "Neuro Modes",
+  "entity": {
+    "sensor": {
+      "confidence": {
+        "name": "Confidence"
+      }
+    },
+    "switch": {
+      "state": {
+        "name": "State"
+      }
+    },
+    "select": {
+      "home_mode": {
+        "name": "Home mode"
+      }
+    }
+  },
   "config": {
     "step": {
       "user": {
         "title": "Neuro Modes",
         "menu_options": {
-          "setup_engine": "Instaluj Główny Silnik",
-          "setup_mode": "Dodaj Tryb Bazowy (np. Dom)",
-          "setup_modifier": "Dodaj Modyfikator (np. Noc)"
+          "setup_engine": "Install engine",
+          "setup_mode": "Add base mode",
+          "setup_modifier": "Add modifier"
         }
       },
       "setup_engine": {
-        "title": "Główny Silnik",
-        "description": "Czy chcesz zainstalować neuronowy silnik obliczeniowy?"
+        "title": "Engine setup",
+        "data": {
+          "install_defaults": "Create default starter modes"
+        }
       },
       "setup_mode": {
-        "title": "Nowy Tryb Bazowy",
+        "title": "New base mode",
         "data": {
-          "name": "Nazwa trybu",
-          "threshold": "Próg aktywacji (0-100)",
-          "delta": "Delta wyłączenia (Histereza)",
-          "override_timeout": "Czas nadpisania (min)"
+          "name": "Mode name",
+          "threshold": "Activation threshold (0-100)",
+          "delta": "Deactivation delta (hysteresis)",
+          "override_timeout": "Manual override timeout (min)"
         }
       },
       "setup_modifier": {
-        "title": "Nowy Modyfikator",
+        "title": "New modifier",
         "data": {
-          "name": "Nazwa modyfikatora",
-          "threshold": "Próg aktywacji (0-100)",
-          "delta": "Delta wyłączenia",
-          "override_timeout": "Czas nadpisania (min)"
+          "name": "Modifier name",
+          "threshold": "Activation threshold (0-100)",
+          "delta": "Deactivation delta",
+          "override_timeout": "Manual override timeout (min)"
         }
       }
     },
     "abort": {
-      "single_instance_allowed": "Silnik Neuro Modes jest już zainstalowany."
+      "single_instance_allowed": "Neuro Modes engine is already installed."
     }
   },
   "options": {
+    "error": {
+      "duplicate_person": "The same person cannot be both a child and a parent."
+    },
     "step": {
       "init": {
-        "title": "Zarządzanie Trybem",
+        "title": "Mode management",
         "menu_options": {
-          "edit_settings": "Ustawienia ogólne (Nazwa/Progi)",
-          "manage_sources": "Zarządzaj poszlakami (Encje)",
-          "select_template": "✨ Zastosuj inteligentny szablon"
+          "edit_settings": "Edit settings",
+          "manage_sources": "Manage sources",
+          "select_template": "Apply template"
         }
       },
       "edit_settings": {
-        "title": "Edycja parametrów",
+        "title": "Edit settings",
         "data": {
-          "name": "Nazwa",
-          "threshold": "Próg aktywacji",
+          "name": "Name",
+          "threshold": "Activation threshold",
           "delta": "Delta",
           "override_timeout": "Timeout (min)"
         }
       },
       "manage_sources": {
-        "title": "Lista poszlak",
-        "description": "Wybierz poszlakę, aby ją edytować, lub dodaj nową.",
+        "title": "Sources",
         "data": {
-          "selected_source": "Wybierz akcję"
+          "selected_source": "Select source or action"
         }
       },
       "add_source": {
-        "title": "Dodaj poszlakę",
+        "title": "Add source",
         "data": {
-          "entity_id": "Encja",
-          "state": "Stan aktywujący",
-          "weight": "Waga (pkt)"
+          "entity_id": "Entity",
+          "state": "Expected state",
+          "weight": "Weight (points)"
+        }
+      },
+      "edit_source_form": {
+        "title": "Edit source",
+        "description": "Selected source: {source}",
+        "data": {
+          "state": "Expected state",
+          "weight": "Weight (points)"
+        }
+      },
+      "edit_source_menu": {
+        "title": "Manage source",
+        "description": "Selected source: {source}",
+        "data": {
+          "action": "Action"
+        },
+        "menu_options": {
+          "edit_source_form": "Edit state and weight",
+          "delete_source_action": "Delete source",
+          "manage_sources": "Back"
+        }
+      },
+      "delete_source_action": {
+        "title": "Confirm deletion",
+        "description": "Do you want to remove source: {source}?",
+        "data": {
+          "confirm": "Confirm"
         }
       },
       "select_template": {
-        "title": "Wybierz Szablon",
-        "description": "UWAGA: Wybranie szablonu nadpisze Twoje obecne poszlaki dla tego trybu nową, inteligentną logiką.",
+        "title": "Select template",
+        "description": "Selecting a template will replace current sources for this mode.",
         "menu_options": {
-          "template_work": "💼 Praca Zdalna (Home Office)",
-          "template_guests": "🥂 Goście w domu",
-          "template_vacation": "🏖️ Wakacje (Długa nieobecność)"
+          "template_home": "Home",
+          "template_away": "Away",
+          "template_vacation": "Vacation",
+          "template_alarm": "Alarm",
+          "template_children": "Children",
+          "template_cinema": "Cinema",
+          "template_guests": "Guests",
+          "template_night": "Night",
+          "template_work": "Work from home",
+          "init": "Back"
+        }
+      },
+      "template_home": {
+        "title": "Template: Home",
+        "data": {
+          "home_zone": "Home zone"
+        }
+      },
+      "template_away": {
+        "title": "Template: Away",
+        "data": {
+          "home_zone": "Home zone"
+        }
+      },
+      "template_night": {
+        "title": "Template: Night",
+        "data": {
+          "sun_entity": "Sun entity",
+          "chargers": "Optional chargers"
+        }
+      },
+      "template_cinema": {
+        "title": "Template: Cinema",
+        "data": {
+          "tv_entity": "TV media player",
+          "lights": "Optional lights"
+        }
+      },
+      "template_alarm": {
+        "title": "Template: Alarm",
+        "data": {
+          "alarm_entity": "Alarm panel"
         }
       },
       "template_work": {
-        "title": "Szablon: Praca Zdalna",
+        "title": "Template: Work from home",
         "data": {
-          "workday_entity": "Sensor dni pracujących",
-          "user_entity": "Kto pracuje? (Person)",
-          "other_people": "Kto przerywa pracę? (Blokada)",
-          "start_hour": "Od godziny",
-          "end_hour": "Do godziny"
+          "workers": "Workers",
+          "activity_sensors": "Optional activity sensors",
+          "disruptors": "Optional disruptors"
         }
       },
       "template_guests": {
-        "title": "Szablon: Goście",
+        "title": "Template: Guests",
         "data": {
-          "guest_wifi": "Encja Wi-Fi dla gości",
-          "public_areas": "Strefy publiczne (Magic Areas)"
+          "guest_wifi": "Guest Wi-Fi entity",
+          "public_areas": "Public area sensors"
         }
       },
       "template_vacation": {
-        "title": "Szablon: Wakacje",
+        "title": "Template: Vacation",
         "data": {
-          "alarm_entity": "System Alarmowy",
-          "presence_entity": "Główny domownik",
-          "min_days": "Minimalna ilość dni"
+          "home_zone": "Home zone",
+          "alarm_entity": "Optional alarm panel",
+          "min_hours": "Minimum hours"
         }
       },
-      "edit_source_menu": { "title": "Zarządzaj: {source}", "data": { "action": "Akcja" } }
+      "template_children": {
+        "title": "Template: Children",
+        "data": {
+          "children_entities": "Children",
+          "parent_entities": "Parents"
+        }
+      }
     },
     "abort": {
-      "engine_no_options": "Silnik nie posiada dodatkowych opcji.",
-      "not_implemented_yet": "Ta funkcja będzie dostępna wkrótce."
+      "engine_no_options": "Engine has no options.",
+      "not_implemented_yet": "This feature is not implemented yet."
     }
   }
 }

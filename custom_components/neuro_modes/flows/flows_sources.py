@@ -2,7 +2,7 @@ import voluptuous as vol
 from homeassistant.helpers import selector
 
 async def async_step_manage_sources(flow, user_input=None):
-    """Główna lista poszlak (Wstecz na samym dole)."""
+
     sources = list(flow._entry.options.get("sources", flow._entry.data.get("sources", [])))
     
     if user_input is not None:
@@ -16,7 +16,6 @@ async def async_step_manage_sources(flow, user_input=None):
 
     options = [{"value": "ADD_NEW", "label": "➕ Dodaj nową poszlakę"}]
     
-    # Renderowanie dynamicznej listy encji
     for src in sources:
         entity_id = src["entity_id"]
         weight = src["weight"]
@@ -29,8 +28,7 @@ async def async_step_manage_sources(flow, user_input=None):
             
         options.append({"value": entity_id, "label": f"{friendly_name} ({entity_id}) - {weight} pkt"})
 
-    # MAGIA: Przycisk Wstecz na samym końcu listy
-    options.append({"value": "BACK", "label": "⬅️ Wstecz (Powrót do menu)"})
+    options.append({"value": "BACK", "label": "Wstecz"})
 
     return flow.async_show_form(
         step_id="manage_sources",
@@ -42,9 +40,7 @@ async def async_step_manage_sources(flow, user_input=None):
     )
 
 async def async_step_edit_source_menu(flow, user_input=None):
-    """Prawdziwe, klikalne menu dla wybranej poszlaki z przyjazną nazwą w nagłówku."""
     
-    # Pobieranie Friendly Name dla nagłówka
     state_obj = flow.hass.states.get(flow._selected_source_id)
     friendly_name = state_obj.attributes.get("friendly_name") if state_obj and state_obj.attributes.get("friendly_name") else flow._selected_source_id
 
@@ -57,16 +53,15 @@ async def async_step_edit_source_menu(flow, user_input=None):
 async def async_step_delete_source_action(flow, user_input=None):
     """Ekran bezpiecznika: Potwierdzenie usunięcia poszlaki."""
     if user_input is not None:
-        if user_input["confirm"] == "yes":
-            # Potwierdzono - usuwamy
+        if user_input["confirm"]:
+
             sources = list(flow._entry.options.get("sources", flow._entry.data.get("sources", [])))
             sources = [s for s in sources if s["entity_id"] != flow._selected_source_id]
             return flow.async_create_entry(title="", data={"sources": sources})
         else:
-            # Anulowano - wracamy do menu
+
             return await async_step_edit_source_menu(flow)
 
-    # Pobieramy nazwę, żeby wstawić ją w komunikat
     state_obj = flow.hass.states.get(flow._selected_source_id)
     friendly_name = state_obj.attributes.get("friendly_name") if state_obj and state_obj.attributes.get("friendly_name") else flow._selected_source_id
 
@@ -74,19 +69,14 @@ async def async_step_delete_source_action(flow, user_input=None):
         step_id="delete_source_action",
         description_placeholders={"source": f"{friendly_name} ({flow._selected_source_id})"},
         data_schema=vol.Schema({
-            vol.Required("confirm", default="no"): selector.SelectSelector(
-                selector.SelectSelectorConfig(options=[
-                    {"value": "yes", "label": "✅ TAK, usuń poszlakę"},
-                    {"value": "no", "label": "❌ NIE, wracam do menu"}
-                ], mode="list")
-            )
+            vol.Required("confirm", default=False): selector.BooleanSelector()
         })
     )
 
 async def async_step_edit_source_form(flow, user_input=None):
     """Formularz edycji konkretnej poszlaki."""
     sources = list(flow._entry.options.get("sources", flow._entry.data.get("sources", [])))
-    # Szukamy obecnych danych wybranej poszlaki
+
     current_source = next((s for s in sources if s["entity_id"] == flow._selected_source_id), {})
     
     if user_input is not None:
@@ -100,7 +90,6 @@ async def async_step_edit_source_form(flow, user_input=None):
                 break
         return flow.async_create_entry(title="", data={"sources": sources})
 
-    # Ładny nagłówek z Friendly Name
     state_obj = flow.hass.states.get(flow._selected_source_id)
     friendly_name = state_obj.attributes.get("friendly_name") if state_obj and state_obj.attributes.get("friendly_name") else flow._selected_source_id
 
