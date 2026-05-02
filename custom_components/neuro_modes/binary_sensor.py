@@ -25,7 +25,8 @@ class NeuroSourceBinarySensor(CoordinatorEntity, BinarySensorEntity):
         self._source = source
         self._name = coordinator.entry.data.get(CONF_NAME)
         self._attr_name = source["entity_id"]
-        self._attr_unique_id = f"{coordinator.entry.entry_id}_source_{index}_{source['entity_id']}"
+        self._attr_unique_id = f"{coordinator.entry.entry_id}_source_{index}"
+        self._attr_device_class = "occupancy"
 
     @property
     def device_info(self) -> DeviceInfo:

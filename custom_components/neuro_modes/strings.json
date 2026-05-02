@@ -39,7 +39,8 @@
           "name": "Mode name",
           "threshold": "Activation threshold (0-100)",
           "delta": "Deactivation delta (hysteresis)",
-          "override_timeout": "Manual override timeout (min)"
+          "override_timeout": "Manual override timeout (min)",
+          "initial_template": "Initial template"
         }
       },
       "setup_modifier": {
@@ -48,7 +49,8 @@
           "name": "Modifier name",
           "threshold": "Activation threshold (0-100)",
           "delta": "Deactivation delta",
-          "override_timeout": "Manual override timeout (min)"
+          "override_timeout": "Manual override timeout (min)",
+          "initial_template": "Initial template"
         }
       }
     },
@@ -58,7 +60,10 @@
   },
   "options": {
     "error": {
-      "duplicate_person": "The same person cannot be both a child and a parent."
+      "duplicate_person": "The same person cannot be both a child and a parent.",
+      "name_exists": "Name already exists.",
+      "duplicate_source": "This source already exists.",
+      "invalid_weight": "Weight must be between 0 and 100."
     },
     "step": {
       "init": {

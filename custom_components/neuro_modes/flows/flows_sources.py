@@ -112,8 +112,20 @@ async def async_step_edit_source_form(flow, user_input=None):
     sources = list(flow._entry.options.get("sources", flow._entry.data.get("sources", [])))
 
     current_source = next((s for s in sources if s["entity_id"] == flow._selected_source_id), {})
+    state_obj = flow.hass.states.get(flow._selected_source_id)
+    friendly_name = state_obj.attributes.get("friendly_name") if state_obj and state_obj.attributes.get("friendly_name") else flow._selected_source_id
     
     if user_input is not None:
+        if user_input["weight"] < 0 or user_input["weight"] > 100:
+            return flow.async_show_form(
+                step_id="edit_source_form",
+                description_placeholders={"source": f"{friendly_name} ({flow._selected_source_id})"},
+                data_schema=vol.Schema({
+                    vol.Required("state", default=user_input.get("state", current_source.get("state", "on"))): str,
+                    vol.Required("weight", default=user_input.get("weight", current_source.get("weight", 30))): int,
+                }),
+                errors={"weight": "invalid_weight"},
+            )
         for i, s in enumerate(sources):
             if s["entity_id"] == flow._selected_source_id:
                 sources[i] = {
@@ -124,8 +136,6 @@ async def async_step_edit_source_form(flow, user_input=None):
                 break
         return flow.async_create_entry(title="", data={"sources": sources})
 
-    state_obj = flow.hass.states.get(flow._selected_source_id)
-    friendly_name = state_obj.attributes.get("friendly_name") if state_obj and state_obj.attributes.get("friendly_name") else flow._selected_source_id
 
     return flow.async_show_form(
         step_id="edit_source_form",
@@ -140,6 +150,29 @@ async def async_step_add_source(flow, user_input=None):
     """Krok dodawania nowej poszlaki."""
     if user_input is not None:
         sources = list(flow._entry.options.get("sources", flow._entry.data.get("sources", [])))
+
+        if any(s.get("entity_id") == user_input["entity_id"] for s in sources):
+            return flow.async_show_form(
+                step_id="add_source",
+                data_schema=vol.Schema({
+                    vol.Required("entity_id"): selector.EntitySelector(),
+                    vol.Required("state", default=user_input.get("state", "on")): str,
+                    vol.Required("weight", default=user_input.get("weight", 30)): int,
+                }),
+                errors={"entity_id": "duplicate_source"},
+            )
+
+        if user_input["weight"] < 0 or user_input["weight"] > 100:
+            return flow.async_show_form(
+                step_id="add_source",
+                data_schema=vol.Schema({
+                    vol.Required("entity_id"): selector.EntitySelector(),
+                    vol.Required("state", default=user_input.get("state", "on")): str,
+                    vol.Required("weight", default=user_input.get("weight", 30)): int,
+                }),
+                errors={"weight": "invalid_weight"},
+            )
+
         sources.append(user_input)
         return flow.async_create_entry(title="", data={"sources": sources})
 

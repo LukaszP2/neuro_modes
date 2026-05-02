@@ -22,8 +22,9 @@ from .flows.flows_vacation import async_step_template_vacation
 from .flows.flows_children import async_step_template_children
 
 class NeuroModesConfigFlow(config_entries.ConfigFlow, domain=DOMAIN): # type: ignore
-    """Obsługa pierwszej instalacji."""
-    VERSION = 1
+
+    VERSION = 2
+    MINOR_VERSION = 1
 
     async def async_step_user(self, user_input=None):
         """Główny punkt wejścia do konfiguracji."""

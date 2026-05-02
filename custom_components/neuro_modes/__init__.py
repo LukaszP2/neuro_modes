@@ -2,7 +2,7 @@ import asyncio
 
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
-from .const import DOMAIN, CONF_ENTRY_TYPE, ENTRY_TYPE_ENGINE, ENTRY_TYPE_MODE
+from .const import DOMAIN, CONF_ENTRY_TYPE, ENTRY_TYPE_ENGINE, ENTRY_TYPE_MODE, ENTRY_TYPE_MODIFIER, CONF_SOURCES
 from .engine import NeuroEngine
 from .coordinator import NeuroModesCoordinator
 
@@ -19,7 +19,7 @@ def _refresh_engine_coordinators(hass: HomeAssistant) -> None:
 
 
 async def _refresh_engine_coordinators_delayed(hass: HomeAssistant) -> None:
-    """Run one loop tick later to catch async_entries state after add/remove."""
+    """Run one event loop tick later to catch async_entries state after add/remove."""
     await asyncio.sleep(0)
     _refresh_engine_coordinators(hass)
 
@@ -33,8 +33,8 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
     await coordinator.async_setup()
     hass.data[DOMAIN][entry.entry_id] = coordinator
 
-    # Jeśli dodano nowy tryb bazowy po silniku, odświeżamy koordynator silnika,
-    # aby selector trybu domu natychmiast zobaczył nową opcję.
+    # If a new base mode was added after engine, refresh engine coordinator
+    # so the mode selector immediately sees the new option.
     if entry.data.get(CONF_ENTRY_TYPE) == ENTRY_TYPE_MODE:
         _refresh_engine_coordinators(hass)
         hass.async_create_task(_refresh_engine_coordinators_delayed(hass))
@@ -45,6 +45,28 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
 
 async def async_reload_entry(hass: HomeAssistant, entry: ConfigEntry) -> None:
     await hass.config_entries.async_reload(entry.entry_id)
+
+
+async def async_migrate_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
+    """Migrate config entry to newer versions."""
+    data = dict(entry.data)
+
+    if entry.version < 2:
+        if CONF_ENTRY_TYPE not in data:
+            title = (entry.title or "").lower()
+            if title.startswith("mode:"):
+                data[CONF_ENTRY_TYPE] = ENTRY_TYPE_MODE
+            elif title.startswith("modifier:"):
+                data[CONF_ENTRY_TYPE] = ENTRY_TYPE_MODIFIER
+            else:
+                data[CONF_ENTRY_TYPE] = ENTRY_TYPE_ENGINE
+
+        if data.get(CONF_ENTRY_TYPE) in (ENTRY_TYPE_MODE, ENTRY_TYPE_MODIFIER) and CONF_SOURCES not in data:
+            data[CONF_SOURCES] = []
+
+        hass.config_entries.async_update_entry(entry, data=data, version=2)
+
+    return True
 
 async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     entry_type = entry.data.get(CONF_ENTRY_TYPE)
@@ -57,9 +79,14 @@ async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     if unload_ok:
         hass.data[DOMAIN].pop(entry.entry_id)
 
-        # Jeśli usunięto tryb bazowy, odświeżamy koordynator silnika,
-        # aby selector natychmiast usunął opcję z listy.
+        # If a base mode was removed, refresh engine coordinator
+        # so the selector immediately removes the option.
         if entry_type == ENTRY_TYPE_MODE:
             _refresh_engine_coordinators(hass)
             hass.async_create_task(_refresh_engine_coordinators_delayed(hass))
+
+        # Clean up engine if this was the last entry
+        if not any(e.data.get(CONF_ENTRY_TYPE) != ENTRY_TYPE_ENGINE for e in hass.config_entries.async_entries(DOMAIN)):
+            hass.data[DOMAIN].pop("engine", None)
+
     return unload_ok

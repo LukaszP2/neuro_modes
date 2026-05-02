@@ -36,7 +36,7 @@ class NeuroModesCoordinator(DataUpdateCoordinator[dict]):
     @callback
     def _handle_state_change(self, event):
         _LOGGER.debug("State change received for entry_id=%s mode_name=%s", self.entry.entry_id, self.mode_name)
-        self.hass.async_create_task(self.async_refresh())
+        self.async_request_refresh()
 
     def set_override(self, is_on):
         """Obsługa kliknięcia z czasem wygasania."""
@@ -53,11 +53,11 @@ class NeuroModesCoordinator(DataUpdateCoordinator[dict]):
 
     @callback
     def _clear_override(self, _now):
-        """Resetuje nadpisanie i pozwala automatowi odzyskać kontrolę."""
+        """Clear manual override and allow automation to regain control."""
         mode_state = self.engine.states.get(self.mode_name, {})
         if mode_state.get("human_override"):
             _LOGGER.debug("Manual override timeout reached for mode=%s", self.mode_name)
-            mode_state["human_override"] = False
+            self.engine.set_manual_override(self.mode_name, False)
             self.hass.async_create_task(self.async_refresh())
 
     async def _async_update_data(self):
@@ -103,3 +103,4 @@ class NeuroModesCoordinator(DataUpdateCoordinator[dict]):
             unsub()
         if self._timer_unsub:
             self._timer_unsub()
+        await super().async_shutdown()

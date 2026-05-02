@@ -1,8 +1,8 @@
 import asyncio
 from types import SimpleNamespace
 
-from custom_components.neuro_modes.const import CONF_ENTRY_TYPE, CONF_SOURCES, ENTRY_TYPE_MODE, ENTRY_TYPE_MODIFIER
-from custom_components.neuro_modes.flows.flows_general import async_step_setup_mode, async_step_setup_modifier
+from ..const import CONF_ENTRY_TYPE, CONF_SOURCES, ENTRY_TYPE_MODE, ENTRY_TYPE_MODIFIER
+from ..flows.flows_general import async_step_setup_mode, async_step_setup_modifier
 
 
 class _FakeFlow:
@@ -18,7 +18,7 @@ class _FakeFlow:
 
 def test_setup_mode_creates_mode_entry_with_sources_list():
     flow = _FakeFlow()
-    user_input = {"name": "Dom", "threshold": 70, "delta": 20, "override_timeout": 120}
+    user_input = {"name": "Dom", "threshold": 70, "delta": 20, "override_timeout": 120, "initial_template": "none"}
 
     result = asyncio.run(async_step_setup_mode(flow, user_input))
 
@@ -29,7 +29,7 @@ def test_setup_mode_creates_mode_entry_with_sources_list():
 
 def test_setup_modifier_creates_modifier_entry_with_sources_list():
     flow = _FakeFlow()
-    user_input = {"name": "Noc", "threshold": 70, "delta": 20, "override_timeout": 120}
+    user_input = {"name": "Noc", "threshold": 70, "delta": 20, "override_timeout": 120, "initial_template": "none"}
 
     result = asyncio.run(async_step_setup_modifier(flow, user_input))
 

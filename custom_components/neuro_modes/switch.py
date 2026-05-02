@@ -1,4 +1,5 @@
 from homeassistant.components.switch import SwitchEntity
+from homeassistant.helpers.restore_state import RestoreEntity
 from homeassistant.helpers.device_registry import DeviceInfo
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 from .const import DOMAIN, CONF_ENTRY_TYPE, ENTRY_TYPE_ENGINE, CONF_NAME
@@ -9,7 +10,7 @@ async def async_setup_entry(hass, entry, async_add_entities):
     coordinator = hass.data[DOMAIN][entry.entry_id]
     async_add_entities([NeuroModeSwitch(coordinator)])
 
-class NeuroModeSwitch(CoordinatorEntity, SwitchEntity):
+class NeuroModeSwitch(CoordinatorEntity, RestoreEntity, SwitchEntity):
     _attr_has_entity_name = True
     _attr_translation_key = "state"
 
@@ -18,17 +19,23 @@ class NeuroModeSwitch(CoordinatorEntity, SwitchEntity):
         self.coordinator = coordinator
         self._name = coordinator.entry.data.get(CONF_NAME)
         self._attr_unique_id = f"{coordinator.entry.entry_id}_state"
+        self._engine_id = None
+
+    async def async_added_to_hass(self):
+        await super().async_added_to_hass()
+        for entry in self.coordinator.hass.config_entries.async_entries(DOMAIN):
+            if entry.data.get(CONF_ENTRY_TYPE) == ENTRY_TYPE_ENGINE:
+                self._engine_id = entry.entry_id
+                break
+        last_state = await self.async_get_last_state()
+        if last_state:
+            self._attr_is_on = last_state.state == "on"
 
     @property
     def device_info(self) -> DeviceInfo:
-        engine_id = None
-        for entry in self.coordinator.hass.config_entries.async_entries(DOMAIN):
-            if entry.data.get(CONF_ENTRY_TYPE) == ENTRY_TYPE_ENGINE:
-                engine_id = entry.entry_id
-                break
         info = DeviceInfo(identifiers={(DOMAIN, self.coordinator.entry.entry_id)}, name=f"Neuro Modes: {self._name}", manufacturer="Neuro Home")
-        if engine_id:
-            info["via_device"] = (DOMAIN, engine_id)
+        if self._engine_id:
+            info["via_device"] = (DOMAIN, self._engine_id)
         return info
 
     @property

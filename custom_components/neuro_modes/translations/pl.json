@@ -39,7 +39,8 @@
           "name": "Nazwa trybu",
           "threshold": "Próg aktywacji (0-100)",
           "delta": "Delta wyłączenia (histereza)",
-          "override_timeout": "Timeout ręcznego nadpisania (min)"
+          "override_timeout": "Timeout ręcznego nadpisania (min)",
+          "initial_template": "Szablon początkowy"
         }
       },
       "setup_modifier": {
@@ -48,7 +49,8 @@
           "name": "Nazwa modyfikatora",
           "threshold": "Próg aktywacji (0-100)",
           "delta": "Delta wyłączenia",
-          "override_timeout": "Timeout ręcznego nadpisania (min)"
+          "override_timeout": "Timeout ręcznego nadpisania (min)",
+          "initial_template": "Szablon początkowy"
         }
       }
     },
@@ -58,7 +60,10 @@
   },
   "options": {
     "error": {
-      "duplicate_person": "Ta sama osoba nie może być jednocześnie dzieckiem i rodzicem."
+      "duplicate_person": "Ta sama osoba nie może być jednocześnie dzieckiem i rodzicem.",
+      "name_exists": "Nazwa już istnieje.",
+      "duplicate_source": "To źródło już istnieje.",
+      "invalid_weight": "Waga musi być w zakresie 0-100."
     },
     "step": {
       "init": {
