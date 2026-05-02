@@ -21,21 +21,26 @@ class NeuroModesCoordinator(DataUpdateCoordinator[dict]):
         self.mode_name = entry.data.get(CONF_NAME)
 
     async def async_setup(self):
+        _LOGGER.debug("Coordinator setup started for entry_id=%s mode_name=%s", self.entry.entry_id, self.mode_name)
         if self.mode_name:
             sources = self.entry.options.get(CONF_SOURCES, self.entry.data.get(CONF_SOURCES, []))
             if sources:
                 entity_ids = [src["entity_id"] for src in sources]
                 unsub = async_track_state_change_event(self.hass, entity_ids, self._handle_state_change)
                 self._unsub.append(unsub)
+                _LOGGER.debug("Registered %s state listeners for entry_id=%s", len(entity_ids), self.entry.entry_id)
 
         await self.async_refresh()
+        _LOGGER.debug("Coordinator setup finished for entry_id=%s", self.entry.entry_id)
 
     @callback
     def _handle_state_change(self, event):
+        _LOGGER.debug("State change received for entry_id=%s mode_name=%s", self.entry.entry_id, self.mode_name)
         self.hass.async_create_task(self.async_refresh())
 
     def set_override(self, is_on):
         """Obsługa kliknięcia z czasem wygasania."""
+        _LOGGER.debug("Manual override set for mode=%s value=%s", self.mode_name, is_on)
         self.engine.set_manual_override(self.mode_name, is_on)
         self.async_set_updated_data(self._current_state())
 
@@ -51,6 +56,7 @@ class NeuroModesCoordinator(DataUpdateCoordinator[dict]):
         """Resetuje nadpisanie i pozwala automatowi odzyskać kontrolę."""
         mode_state = self.engine.states.get(self.mode_name, {})
         if mode_state.get("human_override"):
+            _LOGGER.debug("Manual override timeout reached for mode=%s", self.mode_name)
             mode_state["human_override"] = False
             self.hass.async_create_task(self.async_refresh())
 
@@ -83,6 +89,13 @@ class NeuroModesCoordinator(DataUpdateCoordinator[dict]):
             "active": active_sources,
             "human_override": False
         }
+        _LOGGER.debug(
+            "Recalculated mode=%s state=%s confidence=%s active_sources=%s",
+            self.mode_name,
+            new_state,
+            score,
+            len(active_sources),
+        )
         return self._current_state()
 
     async def async_unload(self):

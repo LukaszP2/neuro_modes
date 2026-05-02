@@ -2,41 +2,75 @@ import voluptuous as vol
 from homeassistant.helpers import selector
 
 async def async_step_manage_sources(flow, user_input=None):
+    return flow.async_show_menu(
+        step_id="manage_sources",
+        menu_options=["add_source", "pick_source_for_edit", "pick_source_for_delete", "init"]
+    )
 
+
+async def async_step_pick_source_for_edit(flow, user_input=None):
     sources = list(flow._entry.options.get("sources", flow._entry.data.get("sources", [])))
-    
-    if user_input is not None:
-        if user_input["selected_source"] == "BACK":
-            return await flow.async_step_init()
-        if user_input["selected_source"] == "ADD_NEW":
-            return await flow.async_step_add_source()
-            
-        flow._selected_source_id = user_input["selected_source"]
-        return await flow.async_step_edit_source_menu()
 
-    options = [{"value": "ADD_NEW", "label": "➕ Dodaj nową poszlakę"}]
-    
+    if not sources:
+        return flow.async_abort(reason="no_sources")
+
+    if user_input is not None:
+        flow._selected_source_id = user_input["selected_source"]
+        return await flow.async_step_edit_source_form()
+
+    options = []
     for src in sources:
         entity_id = src["entity_id"]
-        weight = src["weight"]
         state_obj = flow.hass.states.get(entity_id)
-        
         if state_obj and state_obj.attributes.get("friendly_name"):
             friendly_name = state_obj.attributes.get("friendly_name")
         else:
             friendly_name = entity_id
-            
-        options.append({"value": entity_id, "label": f"{friendly_name} ({entity_id}) - {weight} pkt"})
 
-    options.append({"value": "BACK", "label": "Wstecz"})
+        options.append({"value": entity_id, "label": f"{friendly_name} ({entity_id})"})
 
     return flow.async_show_form(
-        step_id="manage_sources",
-        data_schema=vol.Schema({
-            vol.Required("selected_source", default="ADD_NEW"): selector.SelectSelector(
-                selector.SelectSelectorConfig(options=options, mode="list")
-            )
-        })
+        step_id="pick_source_for_edit",
+        data_schema=vol.Schema(
+            {
+                vol.Required("selected_source"): selector.SelectSelector(
+                    selector.SelectSelectorConfig(options=options, mode="list")
+                )
+            }
+        ),
+    )
+
+
+async def async_step_pick_source_for_delete(flow, user_input=None):
+    sources = list(flow._entry.options.get("sources", flow._entry.data.get("sources", [])))
+
+    if not sources:
+        return flow.async_abort(reason="no_sources")
+
+    if user_input is not None:
+        flow._selected_source_id = user_input["selected_source"]
+        return await flow.async_step_delete_source_action()
+
+    options = []
+    for src in sources:
+        entity_id = src["entity_id"]
+        state_obj = flow.hass.states.get(entity_id)
+        if state_obj and state_obj.attributes.get("friendly_name"):
+            friendly_name = state_obj.attributes.get("friendly_name")
+        else:
+            friendly_name = entity_id
+
+        options.append({"value": entity_id, "label": f"{friendly_name} ({entity_id})"})
+
+    return flow.async_show_form(
+        step_id="pick_source_for_delete",
+        data_schema=vol.Schema(
+            {
+                vol.Required("selected_source"): selector.SelectSelector(
+                    selector.SelectSelectorConfig(options=options, mode="list")
+                )
+            }
+        ),
     )
 
 async def async_step_edit_source_menu(flow, user_input=None):

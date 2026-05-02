@@ -4,6 +4,8 @@ from .flows.flows_general import async_step_setup_engine, async_step_setup_mode,
 from .flows.flows_settings import async_step_edit_settings
 from .flows.flows_sources import (
     async_step_manage_sources, 
+    async_step_pick_source_for_edit,
+    async_step_pick_source_for_delete,
     async_step_add_source, 
     async_step_edit_source_menu,
     async_step_edit_source_form,
@@ -80,6 +82,12 @@ class NeuroModesOptionsFlow(config_entries.OptionsFlow):
     async def async_step_add_source(self, user_input=None):
         return await async_step_add_source(self, user_input)
 
+    async def async_step_pick_source_for_edit(self, user_input=None):
+        return await async_step_pick_source_for_edit(self, user_input)
+
+    async def async_step_pick_source_for_delete(self, user_input=None):
+        return await async_step_pick_source_for_delete(self, user_input)
+
     async def async_step_edit_source_menu(self, user_input=None):
         return await async_step_edit_source_menu(self, user_input)
     
@@ -90,7 +98,7 @@ class NeuroModesOptionsFlow(config_entries.OptionsFlow):
         return await async_step_edit_source_form(self, user_input)
 
     async def async_step_select_template(self, user_input=None):
-        """Wielojęzyczne menu szablonów z przyciskiem wstecz."""
+
         return self.async_show_menu(
             step_id="select_template",
             menu_options=[

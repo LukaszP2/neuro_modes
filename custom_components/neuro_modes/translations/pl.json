@@ -80,8 +80,23 @@
       },
       "manage_sources": {
         "title": "Źródła",
+        "menu_options": {
+          "add_source": "Dodaj źródło",
+          "pick_source_for_edit": "Edytuj źródło",
+          "pick_source_for_delete": "Usuń źródło",
+          "init": "Wstecz"
+        }
+      },
+      "pick_source_for_edit": {
+        "title": "Wybierz źródło do edycji",
         "data": {
-          "selected_source": "Wybierz źródło lub akcję"
+          "selected_source": "Źródło"
+        }
+      },
+      "pick_source_for_delete": {
+        "title": "Wybierz źródło do usunięcia",
+        "data": {
+          "selected_source": "Źródło"
         }
       },
       "add_source": {
@@ -200,7 +215,8 @@
     },
     "abort": {
       "engine_no_options": "Silnik nie ma opcji.",
-      "not_implemented_yet": "Ta funkcja nie jest jeszcze zaimplementowana."
+      "not_implemented_yet": "Ta funkcja nie jest jeszcze zaimplementowana.",
+      "no_sources": "Brak skonfigurowanych źródeł."
     }
   }
 }

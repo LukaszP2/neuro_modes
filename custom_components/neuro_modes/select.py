@@ -1,7 +1,10 @@
 from homeassistant.components.select import SelectEntity
 from homeassistant.helpers.device_registry import DeviceInfo
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
+import logging
 from .const import DOMAIN, CONF_ENTRY_TYPE, ENTRY_TYPE_ENGINE, ENTRY_TYPE_MODE, CONF_NAME
+
+_LOGGER = logging.getLogger(__name__)
 
 async def async_setup_entry(hass, entry, async_add_entities):
     if entry.data.get(CONF_ENTRY_TYPE) != ENTRY_TYPE_ENGINE:
@@ -39,6 +42,8 @@ class NeuroBaseSelect(CoordinatorEntity, SelectEntity):
                 if name:
                     modes.append(name)
 
+        _LOGGER.debug("Select options resolved for engine entry_id=%s count=%s", self.coordinator.entry.entry_id, len(modes))
+
         return modes if modes else ["No base mode configured"]
 
     @property
@@ -50,5 +55,6 @@ class NeuroBaseSelect(CoordinatorEntity, SelectEntity):
         return options[0] if options else None
 
     async def async_select_option(self, option: str) -> None:
+        _LOGGER.debug("Select option chosen for engine entry_id=%s option=%s", self.coordinator.entry.entry_id, option)
         self._last_option = option
         self.async_write_ha_state()
