@@ -48,6 +48,12 @@ class _FakeFlowEntries:
         return None
 
 
+class _FakeHass(SimpleNamespace):
+    def async_create_task(self, coro):
+        # Emulujemy zachowanie HA: task jest planowany na aktywnej pętli.
+        return asyncio.create_task(coro)
+
+
 def _make_entry(entry_id: str, entry_type: str):
     return SimpleNamespace(
         entry_id=entry_id,
@@ -64,7 +70,7 @@ def test_mode_added_after_engine_triggers_engine_selector_refresh(monkeypatch):
 
     fake_engine_coordinator = _FakeEngineCoordinator()
 
-    hass = SimpleNamespace(
+    hass = _FakeHass(
         data={DOMAIN: {"engine": object(), "engine-1": fake_engine_coordinator}},
         config_entries=_FakeFlowEntries([engine_entry, mode_entry]),
     )

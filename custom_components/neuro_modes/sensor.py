@@ -1,5 +1,6 @@
 from homeassistant.components.sensor import SensorEntity
 from homeassistant.helpers.device_registry import DeviceInfo
+from homeassistant.helpers.update_coordinator import CoordinatorEntity
 from .const import DOMAIN, CONF_ENTRY_TYPE, ENTRY_TYPE_ENGINE, CONF_NAME
 
 async def async_setup_entry(hass, entry, async_add_entities):
@@ -10,12 +11,13 @@ async def async_setup_entry(hass, entry, async_add_entities):
     coordinator = hass.data[DOMAIN][entry.entry_id]
     async_add_entities([NeuroConfidence(coordinator)])
 
-class NeuroConfidence(SensorEntity):
+class NeuroConfidence(CoordinatorEntity, SensorEntity):
     _attr_has_entity_name = True
     _attr_native_unit_of_measurement = "%"
     _attr_translation_key = "confidence"
 
     def __init__(self, coordinator):
+        super().__init__(coordinator)
         self.coordinator = coordinator
         self._name = coordinator.entry.data.get(CONF_NAME)
         self._attr_unique_id = f"{coordinator.entry.entry_id}_conf_sensor"
@@ -39,7 +41,4 @@ class NeuroConfidence(SensorEntity):
 
     @property
     def native_value(self):
-        return int(self.coordinator.engine.states.get(self._name, {}).get("confidence", 0))
-
-    async def async_added_to_hass(self):
-        self.async_on_remove(self.coordinator.async_add_listener(self.async_write_ha_state))
+        return int((self.coordinator.data or {}).get("confidence", 0))

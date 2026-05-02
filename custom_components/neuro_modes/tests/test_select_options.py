@@ -53,3 +53,10 @@ def test_select_fallback_when_no_base_mode():
     select = NeuroBaseSelect(_FakeCoordinator(entries))
 
     assert select.options == ["No base mode configured"]
+
+
+def test_select_is_event_driven_not_polled():
+    entries = [_entry(ENTRY_TYPE_MODE, "Dom", "Mode: Dom")]
+    select = NeuroBaseSelect(_FakeCoordinator(entries))
+
+    assert select._attr_should_poll is False

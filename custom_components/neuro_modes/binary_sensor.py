@@ -1,5 +1,6 @@
 from homeassistant.components.binary_sensor import BinarySensorEntity
 from homeassistant.helpers.device_registry import DeviceInfo
+from homeassistant.helpers.update_coordinator import CoordinatorEntity
 from .const import DOMAIN, CONF_ENTRY_TYPE, ENTRY_TYPE_ENGINE, CONF_NAME, CONF_SOURCES
 
 async def async_setup_entry(hass, entry, async_add_entities):
@@ -15,10 +16,11 @@ async def async_setup_entry(hass, entry, async_add_entities):
         
     async_add_entities(entities)
 
-class NeuroSourceBinarySensor(BinarySensorEntity):
+class NeuroSourceBinarySensor(CoordinatorEntity, BinarySensorEntity):
     _attr_has_entity_name = True
 
     def __init__(self, coordinator, source, index):
+        super().__init__(coordinator)
         self.coordinator = coordinator
         self._source = source
         self._name = coordinator.entry.data.get(CONF_NAME)
@@ -35,7 +37,7 @@ class NeuroSourceBinarySensor(BinarySensorEntity):
 
     @property
     def is_on(self):
-        mode_state = self.coordinator.engine.states.get(self._name, {})
+        mode_state = self.coordinator.data or {}
         active_sources = mode_state.get("active", [])
         return self._source["entity_id"] in active_sources
 
@@ -46,5 +48,3 @@ class NeuroSourceBinarySensor(BinarySensorEntity):
             "weight_points": self._source.get("weight"),
         }
 
-    async def async_added_to_hass(self):
-        self.async_on_remove(self.coordinator.async_add_listener(self.async_write_ha_state))
