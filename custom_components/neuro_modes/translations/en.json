@@ -189,6 +189,7 @@
       },
       "template_work": {
         "title": "Template: Work from home",
+        "description": "Configure parameters for detecting work from home.",
         "data": {
           "workday_sensor": "Workday sensor",
           "workers": "Workers",
@@ -198,6 +199,17 @@
           "work_end_time": "Latest work end time"
         }
       },
+        "template_work_no_workday": {
+          "title": "Template: Remote work",
+          "description": "Configure parameters for detecting remote work. \n\n Note: The 'Workday' integration was not detected. Many features of this mode are unavailable. Install the official Workday integration in Home Assistant, then reconfigure this mode.",
+          "data": {
+            "workers": "Workers",
+            "activity_sensors": "Optional activity sensors",
+            "disruptors": "Optional disruptors",
+            "work_start_time": "Earliest work start time",
+            "work_end_time": "Latest work end time"
+          }
+        },
       "template_guests": {
         "title": "Template: Guests",
         "data": {

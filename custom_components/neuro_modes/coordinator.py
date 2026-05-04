@@ -81,7 +81,15 @@ class NeuroModesCoordinator(DataUpdateCoordinator[dict]):
         delta = self.entry.data.get(CONF_DELTA, 20)
         current_state = mode_state.get("state", False)
 
-        new_state, score, active_sources = calculate_bayesian_state(self.hass, sources, threshold, delta, current_state)
+        # WYSYŁAMY DODATKOWO self.entry.data, ABY KALKULATOR ZNAŁ ZAKRES GODZIN
+        new_state, score, active_sources = calculate_bayesian_state(
+            self.hass, 
+            sources, 
+            threshold, 
+            delta, 
+            current_state,
+            self.entry.data
+        )
 
         self.engine.states[self.mode_name] = {
             "state": new_state,

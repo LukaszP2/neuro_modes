@@ -189,11 +189,23 @@
       },
       "template_work": {
         "title": "Szablon: Praca z domu",
+        "description": "Skonfiguruj parametry wykrywania pracy z domu.",
         "data": {
           "workday_sensor": "Sensor dnia roboczego (Workday)",
           "workers": "Pracujące osoby",
           "activity_sensors": "Opcjonalne sensory aktywności",
           "disruptors": "Opcjonalne osoby zakłócające",
+          "work_start_time": "Najwcześniejsza godzina rozpoczęcia pracy",
+          "work_end_time": "Najpóźniejsza godzina zakończenia pracy"
+        }
+      },
+      "template_work_no_workday": {
+        "title": "Szablon: Praca Zdalna",
+        "description": "Skonfiguruj parametry wykrywania pracy z domu.\n\n💡 **Uwaga:** Nie wykryto integracji 'Workday'. Wiele funkcji tego trybu jest niedostępnych. Zainstaluj oficjalną integrację Workday w Home Assistant, a następnie skonfiguruj ten tryb ponownie.",
+        "data": {
+          "workers": "Kto pracuje z domu?",
+          "activity_sensors": "Sensory aktywności (np. zużycie PC, status Teams)",
+          "disruptors": "Kto blokuje ten tryb? (np. obecność dzieci)",
           "work_start_time": "Najwcześniejsza godzina rozpoczęcia pracy",
           "work_end_time": "Najpóźniejsza godzina zakończenia pracy"
         }

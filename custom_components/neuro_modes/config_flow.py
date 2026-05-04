@@ -16,7 +16,7 @@ from .flows.flows_away import async_step_template_away
 from .flows.flows_night import async_step_template_night
 from .flows.flows_cinema import async_step_template_cinema
 from .flows.flows_alarm import async_step_template_alarm
-from .flows.flows_work import async_step_template_work
+from .flows.flows_work import async_step_template_work, async_step_template_work_no_workday
 from .flows.flows_guests import async_step_template_guests
 from .flows.flows_vacation import async_step_template_vacation
 from .flows.flows_children import async_step_template_children
@@ -121,6 +121,9 @@ class NeuroModesOptionsFlow(config_entries.OptionsFlow):
 
     async def async_step_template_work(self, user_input=None):
         return await async_step_template_work(self, user_input)
+    
+    async def async_step_template_work_no_workday(self, user_input=None):
+        return await async_step_template_work_no_workday(self, user_input)    
 
     async def async_step_template_guests(self, user_input=None):
         return await async_step_template_guests(self, user_input)
