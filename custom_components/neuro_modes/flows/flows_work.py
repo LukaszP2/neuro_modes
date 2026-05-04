@@ -1,17 +1,25 @@
 import voluptuous as vol
 from homeassistant.helpers import selector
+from homeassistant.helpers import entity_registry as er
 
 async def async_step_template_work(flow, user_input=None):
     errors = {}
-    
-    default_workday = "binary_sensor.workday_sensor"
-    has_workday = flow.hass.states.get(default_workday) is not None
+
+    registry = er.async_get(flow.hass)
+    workday_entities = [
+        entry.entity_id 
+        for entry in registry.entities.values() 
+        if entry.platform == "workday"
+    ]
+
+    has_workday = len(workday_entities) > 0
+    default_workday = workday_entities[0] if has_workday else "binary_sensor.workday_sensor"
 
     if user_input is not None:
         sources = []
         
         if "workday_sensor" in user_input:
-            sources.append({"entity_id": user_input["workday_sensor"], "state": "on", "weight": 20})
+            sources.append({"entity_id": user_input["workday_sensor"], "state": "on", "weight": 40})
 
         for worker in user_input["workers"]:
             sources.append({"entity_id": worker, "state": "home", "weight": 30})
