@@ -36,7 +36,7 @@ class NeuroModesCoordinator(DataUpdateCoordinator[dict]):
     @callback
     def _handle_state_change(self, event):
         _LOGGER.debug("State change received for entry_id=%s mode_name=%s", self.entry.entry_id, self.mode_name)
-        self.async_request_refresh()
+        self.hass.async_create_task(self.async_request_refresh())
 
     def set_override(self, is_on):
         """Obsługa kliknięcia z czasem wygasania."""

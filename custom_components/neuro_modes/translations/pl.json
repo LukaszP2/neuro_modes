@@ -190,9 +190,12 @@
       "template_work": {
         "title": "Szablon: Praca z domu",
         "data": {
+          "workday_sensor": "Sensor dnia roboczego (Workday)",
           "workers": "Pracujące osoby",
           "activity_sensors": "Opcjonalne sensory aktywności",
-          "disruptors": "Opcjonalne osoby zakłócające"
+          "disruptors": "Opcjonalne osoby zakłócające",
+          "work_start_time": "Najwcześniejsza godzina rozpoczęcia pracy",
+          "work_end_time": "Najpóźniejsza godzina zakończenia pracy"
         }
       },
       "template_guests": {

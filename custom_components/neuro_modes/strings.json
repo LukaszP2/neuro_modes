@@ -190,9 +190,12 @@
       "template_work": {
         "title": "Template: Work from home",
         "data": {
+          "workday_sensor": "Workday sensor",
           "workers": "Workers",
           "activity_sensors": "Optional activity sensors",
-          "disruptors": "Optional disruptors"
+          "disruptors": "Optional disruptors",
+          "work_start_time": "Earliest work start time",
+          "work_end_time": "Latest work end time"
         }
       },
       "template_guests": {
