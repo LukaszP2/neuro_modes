@@ -264,13 +264,14 @@
         "data": { "areas": "Strefy" }
       },
       "reactions_lighting": {
-        "title": "Oświetlenie adaptacyjne",
-        "description": "Czy chcesz włączyć oświetlenie adaptacyjne dla tego trybu?",
-        "data": {
-          "adaptive_lighting_mode": "Tryb oświetlenia adaptacyjnego",
-          "fallback_scene": "Scena zapasowa (opcjonalna)"
-        }
-      },
+         "title": "Oświetlenie",
+         "description": "{info}\n\nOpcjonalnie możesz podać Scenę, która ma zostać wywołana.",
+         "data": {
+           "adaptive_lighting_mode": "Zachowanie Adaptive Lighting",
+           "raw_lights_off": "Wybierz światła do zgaszenia",
+           "fallback_scene": "Scena do włączenia"
+         }
+       },
       "reactions_restore": {
         "title": "Przywracanie zachowania",
         "description": "Co powinno się dziać po zakończeniu tego trybu?",

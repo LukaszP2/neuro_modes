@@ -1,4 +1,4 @@
-"""Adaptive Lighting adapter - controls AL switches per area."""
+"""Adaptive Lighting adapter - controls AL switches per area with Smart Search."""
 import logging
 from typing import Any
 
@@ -10,6 +10,20 @@ class AdaptiveLightingAdapter:
     def __init__(self, hass):
         self.hass = hass
 
+    def _find_entity(self, area_id: str, is_sleep: bool) -> str | None:
+        """Inteligentne wyszukiwanie encji AL niezależnie od nazewnictwa."""
+        # Pobieramy wszystkie przełączniki w Home Assistant
+        all_switches = self.hass.states.async_entity_ids("switch")
+        
+        for entity_id in all_switches:
+            if "adaptive_lighting" in entity_id and area_id in entity_id:
+                has_sleep = "sleep_mode" in entity_id
+                if is_sleep and has_sleep:
+                    return entity_id
+                elif not is_sleep and not has_sleep:
+                    return entity_id
+        return None
+
     async def apply_state(self, area_ids: list[str], mode_config: dict[str, Any]) -> None:
         mode = mode_config.get("adaptive_lighting_mode", "leave")
         fallback_scene = mode_config.get("fallback_scene")
@@ -17,16 +31,17 @@ class AdaptiveLightingAdapter:
         for area_id in area_ids:
             try:
                 if mode == "disable":
-                    switch_entity = f"switch.adaptive_lighting_{area_id}"
-                    await self.hass.services.async_call("switch", "turn_off", {"entity_id": switch_entity})
-                    _LOGGER.debug("AL wyłączone dla %s", area_id)
+                    entity = self._find_entity(area_id, False)
+                    if entity:
+                        await self.hass.services.async_call("switch", "turn_off", {"entity_id": entity})
+                        _LOGGER.debug("AL wyłączone dla %s (%s)", area_id, entity)
                     
                 elif mode == "sleep_mode":
-                    switch_entity = f"switch.adaptive_lighting_sleep_mode_{area_id}"
-                    await self.hass.services.async_call("switch", "turn_on", {"entity_id": switch_entity})
-                    _LOGGER.debug("AL Sleep Mode włączony dla %s", area_id)
+                    entity = self._find_entity(area_id, True)
+                    if entity:
+                        await self.hass.services.async_call("switch", "turn_on", {"entity_id": entity})
+                        _LOGGER.debug("AL Sleep Mode włączony dla %s (%s)", area_id, entity)
                     
-                # Jeśli użytkownik wskazał scenę (np. kino), włączamy ją od razu
                 if fallback_scene:
                     await self.hass.services.async_call("scene", "turn_on", {"entity_id": fallback_scene})
                     _LOGGER.debug("Scena %s włączona", fallback_scene)
@@ -37,17 +52,17 @@ class AdaptiveLightingAdapter:
     async def restore(self, area_ids: list[str], restore_action: str) -> None:
         for area_id in area_ids:
             try:
-                if restore_action == "restore_previous" or restore_action == "enable_al":
-                    # Włączamy główny switch AL
-                    switch_entity = f"switch.adaptive_lighting_{area_id}"
-                    await self.hass.services.async_call("switch", "turn_on", {"entity_id": switch_entity})
+                if restore_action in ["restore_previous", "enable_al"]:
+                    main_entity = self._find_entity(area_id, False)
+                    sleep_entity = self._find_entity(area_id, True)
                     
-                    # Na wszelki wypadek wyłączamy Sleep Mode, gdyby był włączony
-                    sleep_switch = f"switch.adaptive_lighting_sleep_mode_{area_id}"
-                    await self.hass.services.async_call("switch", "turn_off", {"entity_id": sleep_switch})
+                    if main_entity:
+                        await self.hass.services.async_call("switch", "turn_on", {"entity_id": main_entity})
+                    if sleep_entity:
+                        await self.hass.services.async_call("switch", "turn_off", {"entity_id": sleep_entity})
                     
                 elif restore_action == "turn_off_all":
-                    # Gasimy całe światło w strefie
+                    # W trybie wyłączania zakładamy standardową grupę z MA lub sam pokój
                     light_group = f"light.{area_id}"
                     await self.hass.services.async_call("light", "turn_off", {"entity_id": light_group})
                     

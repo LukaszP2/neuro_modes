@@ -46,3 +46,13 @@ class NeuroConfidence(CoordinatorEntity, SensorEntity):
     @property
     def native_value(self):
         return int((self.coordinator.data or {}).get("confidence", 0))
+    
+    @property
+    def extra_state_attributes(self):
+        """Zwraca dodatkowe atrybuty encji."""
+        # Pobieramy dane z naszego koordynatora
+        data = self.coordinator.data if self.coordinator.data else {}
+        return {
+            "active_sources": data.get("active", []),
+            "human_override": data.get("human_override", False)
+        }    

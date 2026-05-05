@@ -265,9 +265,10 @@
        },
        "step_lighting": {
          "title": "Lighting behavior",
-         "description": "Configure how adaptive lighting should behave",
+         "description": "{info}\n\nOptionally, you can specify a Scene to activate.",
          "data": {
            "adaptive_lighting_mode": "Adaptive lighting mode",
+            "raw_lights_off": "Select lights to turn off",
            "fallback_scene": "Fallback scene (optional)"
          }
        },

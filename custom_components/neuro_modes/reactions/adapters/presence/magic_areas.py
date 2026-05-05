@@ -1,4 +1,4 @@
-"""Magic Areas adapter - controls presence tracking per area."""
+"""Magic Areas adapter - controls presence tracking per area with Smart Search."""
 import logging
 from typing import Any
 
@@ -10,38 +10,32 @@ class MagicAreasAdapter:
     def __init__(self, hass):
         self.hass = hass
 
+    def _find_entity(self, area_id: str) -> str | None:
+        """Inteligentne wyszukiwanie encji MA (light_control)."""
+        all_switches = self.hass.states.async_entity_ids("switch")
+        
+        for entity_id in all_switches:
+            if area_id in entity_id and "light_control" in entity_id:
+                return entity_id
+        return None
+
     async def apply_state(self, area_ids: list[str], mode_config: dict[str, Any]) -> None:
-        """Apply presence tracking state to areas."""
         for area_id in area_ids:
             try:
-                # Szukamy przełącznika light_control tworzonego przez MA
-                switch_entity = f"switch.area_{area_id}_light_control"
-                
-                # Jeśli tryb to wyłączenie AL, najczęściej chcemy też zablokować auto-światło z MA (np. w kinie)
-                if mode_config.get("adaptive_lighting_mode") == "disable":
-                    await self.hass.services.async_call(
-                        "switch",
-                        "turn_off",
-                        {"entity_id": switch_entity},
-                    )
-                    _LOGGER.debug("Magic Areas: Auto-światło zablokowane dla %s", area_id)
-                
+                entity = self._find_entity(area_id)
+                # Blokujemy auto-światło tylko gdy kazano nam wyłączyć AL
+                if entity and mode_config.get("adaptive_lighting_mode") == "disable":
+                    await self.hass.services.async_call("switch", "turn_off", {"entity_id": entity})
+                    _LOGGER.debug("Magic Areas: Auto-światło zablokowane dla %s (%s)", area_id, entity)
             except Exception as err:
-                _LOGGER.debug("Magic Areas adapter: Błąd dla %s: %s", area_id, err)
+                _LOGGER.debug("Błąd MA adaptera dla %s: %s", area_id, err)
 
     async def restore(self, area_ids: list[str], restore_action: str) -> None:
-        """Restore presence tracking when mode ends."""
         for area_id in area_ids:
             try:
-                # Przywracamy normalne działanie MA
-                switch_entity = f"switch.area_{area_id}_light_control"
-                
-                await self.hass.services.async_call(
-                    "switch",
-                    "turn_on",
-                    {"entity_id": switch_entity},
-                )
-                _LOGGER.debug("Magic Areas: Auto-światło przywrócone dla %s", area_id)
-                
+                entity = self._find_entity(area_id)
+                if entity:
+                    await self.hass.services.async_call("switch", "turn_on", {"entity_id": entity})
+                    _LOGGER.debug("Magic Areas: Auto-światło przywrócone dla %s (%s)", area_id, entity)
             except Exception as err:
-                _LOGGER.debug("Magic Areas adapter błąd przywracania %s: %s", area_id, err)
+                _LOGGER.debug("Błąd MA adaptera przywracania %s: %s", area_id, err)
