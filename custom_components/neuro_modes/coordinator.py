@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import logging
 
+from .reactions.reactor import NeuroReactor
 from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers.event import async_track_state_change_event, async_call_later
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator
@@ -19,6 +20,7 @@ class NeuroModesCoordinator(DataUpdateCoordinator[dict]):
         self._unsub = []
         self._timer_unsub = None
         self.mode_name = entry.data.get(CONF_NAME)
+        self.reactor = NeuroReactor(hass, entry)
 
     async def async_setup(self):
         _LOGGER.debug("Coordinator setup started for entry_id=%s mode_name=%s", self.entry.entry_id, self.mode_name)
@@ -97,6 +99,9 @@ class NeuroModesCoordinator(DataUpdateCoordinator[dict]):
             "active": active_sources,
             "human_override": False
         }
+        
+        self.hass.async_create_task(self.reactor.async_react(new_state))
+
         _LOGGER.debug(
             "Recalculated mode=%s state=%s confidence=%s active_sources=%s",
             self.mode_name,
