@@ -1,4 +1,6 @@
+import voluptuous as vol
 from homeassistant import config_entries
+from homeassistant.helpers import selector
 from .const import DOMAIN, CONF_ENTRY_TYPE, ENTRY_TYPE_ENGINE
 from .flows.flows_general import async_step_setup_engine, async_step_setup_mode, async_step_setup_modifier
 from .flows.flows_settings import async_step_edit_settings
@@ -20,6 +22,9 @@ from .flows.flows_work import async_step_template_work, async_step_template_work
 from .flows.flows_guests import async_step_template_guests
 from .flows.flows_vacation import async_step_template_vacation
 from .flows.flows_children import async_step_template_children
+from .reactions.flows.step_scope import async_step_scope
+from .reactions.flows.step_lighting import async_step_lighting
+from .reactions.flows.step_restore import async_step_restore
 
 class NeuroModesConfigFlow(config_entries.ConfigFlow, domain=DOMAIN): # type: ignore
 
@@ -70,9 +75,32 @@ class NeuroModesOptionsFlow(config_entries.OptionsFlow):
         self._selected_source_id = None
 
     async def async_step_init(self, user_input=None):
+        """Router - choose between sources or reactions."""
         if self._entry.data.get(CONF_ENTRY_TYPE) == ENTRY_TYPE_ENGINE:
             return self.async_abort(reason="engine_no_options")
-        return self.async_show_menu(step_id="init", menu_options=["edit_settings", "manage_sources", "select_template"])
+        
+        if user_input is not None:
+            choice = user_input.get("config_type")
+            if choice == "manage_sources":
+                return await self.async_step_manage_sources()
+            elif choice == "manage_reactions":
+                return await self.async_step_reactions_start()
+        
+        return self.async_show_form(
+            step_id="init",
+            data_schema=vol.Schema({
+                vol.Required("config_type", default="manage_sources"): selector.SelectSelector(
+                    selector.SelectSelectorConfig(
+                        options=[
+                            {"value": "manage_sources", "label": "Manage Sources"},
+                            {"value": "manage_reactions", "label": "Manage Reactions"},
+                        ],
+                        mode="list",
+                    )
+                ),
+            }),
+            translation_key="init",
+        )
 
     async def async_step_edit_settings(self, user_input=None):
         return await async_step_edit_settings(self, user_input)
@@ -147,4 +175,23 @@ class NeuroModesOptionsFlow(config_entries.OptionsFlow):
         return await async_step_template_cinema(self, user_input)
     
     async def async_step_template_alarm(self, user_input=None):
-        return await async_step_template_alarm(self, user_input)    
+        return await async_step_template_alarm(self, user_input)
+
+    # Reactions flow methods
+    async def async_step_reactions_start(self, user_input=None):
+        """Start reactions configuration wizard."""
+        if not hasattr(self, "options_data"):
+            self.options_data = {}
+        return await self.async_step_reactions_scope()
+
+    async def async_step_reactions_scope(self, user_input=None):
+        """Configure reaction scope (areas)."""
+        return await async_step_scope(self, user_input)
+
+    async def async_step_reactions_lighting(self, user_input=None):
+        """Configure lighting behavior."""
+        return await async_step_lighting(self, user_input)
+
+    async def async_step_reactions_restore(self, user_input=None):
+        """Configure restore behavior."""
+        return await async_step_restore(self, user_input)
