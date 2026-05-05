@@ -71,9 +71,20 @@
         "menu_options": {
           "edit_settings": "Edit settings",
           "manage_sources": "Manage sources",
+          "manage_reactions": "Manage reactions",
           "select_template": "Apply template"
         }
-      },
+       },
+       "manage_reactions": {
+         "title": "Reactions",
+         "menu_options": {
+           "add_reaction": "Add reaction",
+           "pick_reaction_for_edit": "Edit reaction",
+           "pick_reaction_for_delete": "Delete reaction",
+           "select_reaction_template": "Apply template",
+           "init": "Back"
+         }
+       },
       "edit_settings": {
         "title": "Edit settings",
         "data": {
@@ -231,12 +242,47 @@
           "children_entities": "Children",
           "parent_entities": "Parents"
         }
-      }
-    },
-    "abort": {
-      "engine_no_options": "Engine has no options.",
-      "not_implemented_yet": "This feature is not implemented yet.",
-      "no_sources": "No sources configured yet."
-    }
-  }
-}
+       },
+       "init_router": {
+         "title": "Configuration",
+         "data": {
+           "config_type": "What would you like to configure?"
+         }
+       },
+    "reactions_start": {
+         "title": "Reactions",
+         "menu_options": {
+           "step_scope": "Configure scope",
+           "init": "Back"
+         }
+       },
+       "step_scope": {
+         "title": "Reaction scope",
+         "description": "Select areas where this reaction applies",
+         "data": {
+           "areas": "Areas"
+         }
+       },
+       "step_lighting": {
+         "title": "Lighting behavior",
+         "description": "Configure how adaptive lighting should behave",
+         "data": {
+           "adaptive_lighting_mode": "Adaptive lighting mode",
+           "fallback_scene": "Fallback scene (optional)"
+         }
+       },
+       "step_restore": {
+         "title": "Restore behavior",
+         "description": "What should happen when this mode ends?",
+         "data": {
+           "restore_action": "Restore action"
+         }
+       }
+     },
+     "abort": {
+       "engine_no_options": "Engine has no options.",
+       "not_implemented_yet": "This feature is not implemented yet.",
+       "no_sources": "No sources configured yet."
+     }
+   }
+ }

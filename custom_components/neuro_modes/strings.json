@@ -66,14 +66,25 @@
       "invalid_weight": "Weight must be between 0 and 100."
     },
     "step": {
-      "init": {
-        "title": "Mode management",
-        "menu_options": {
-          "edit_settings": "Edit settings",
-          "manage_sources": "Manage sources",
-          "select_template": "Apply template"
-        }
-      },
+       "init": {
+         "title": "Mode management",
+         "menu_options": {
+           "edit_settings": "Edit settings",
+           "manage_sources": "Manage sources",
+           "manage_reactions": "Manage reactions",
+           "select_template": "Apply template"
+         }
+       },
+       "manage_reactions": {
+         "title": "Reactions",
+         "menu_options": {
+           "add_reaction": "Add reaction",
+           "pick_reaction_for_edit": "Edit reaction",
+           "pick_reaction_for_delete": "Delete reaction",
+           "select_reaction_template": "Apply template",
+           "init": "Back"
+         }
+       },
       "edit_settings": {
         "title": "Edit settings",
         "data": {

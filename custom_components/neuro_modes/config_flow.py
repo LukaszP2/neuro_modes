@@ -1,6 +1,4 @@
-import voluptuous as vol
 from homeassistant import config_entries
-from homeassistant.helpers import selector
 from .const import DOMAIN, CONF_ENTRY_TYPE, ENTRY_TYPE_ENGINE
 from .flows.flows_general import async_step_setup_engine, async_step_setup_mode, async_step_setup_modifier
 from .flows.flows_settings import async_step_edit_settings
@@ -25,6 +23,12 @@ from .flows.flows_children import async_step_template_children
 from .reactions.flows.step_scope import async_step_scope
 from .reactions.flows.step_lighting import async_step_lighting
 from .reactions.flows.step_restore import async_step_restore
+from .reactions.flows.flows_reactions import (
+    async_step_pick_reaction_for_edit,
+    async_step_pick_reaction_for_delete,
+    async_step_select_reaction_template,
+    async_step_reaction_template_cinema,
+)
 
 class NeuroModesConfigFlow(config_entries.ConfigFlow, domain=DOMAIN): # type: ignore
 
@@ -75,31 +79,12 @@ class NeuroModesOptionsFlow(config_entries.OptionsFlow):
         self._selected_source_id = None
 
     async def async_step_init(self, user_input=None):
-        """Router - choose between sources or reactions."""
+        """Main options menu."""
         if self._entry.data.get(CONF_ENTRY_TYPE) == ENTRY_TYPE_ENGINE:
             return self.async_abort(reason="engine_no_options")
-        
-        if user_input is not None:
-            choice = user_input.get("config_type")
-            if choice == "manage_sources":
-                return await self.async_step_manage_sources()
-            elif choice == "manage_reactions":
-                return await self.async_step_reactions_start()
-        
-        return self.async_show_form(
+        return self.async_show_menu(
             step_id="init",
-            data_schema=vol.Schema({
-                vol.Required("config_type", default="manage_sources"): selector.SelectSelector(
-                    selector.SelectSelectorConfig(
-                        options=[
-                            {"value": "manage_sources", "label": "Manage Sources"},
-                            {"value": "manage_reactions", "label": "Manage Reactions"},
-                        ],
-                        mode="list",
-                    )
-                ),
-            }),
-            translation_key="init",
+            menu_options=["edit_settings", "manage_sources", "manage_reactions", "select_template"]
         )
 
     async def async_step_edit_settings(self, user_input=None):
@@ -178,11 +163,44 @@ class NeuroModesOptionsFlow(config_entries.OptionsFlow):
         return await async_step_template_alarm(self, user_input)
 
     # Reactions flow methods
-    async def async_step_reactions_start(self, user_input=None):
-        """Start reactions configuration wizard."""
-        if not hasattr(self, "options_data"):
-            self.options_data = {}
+    async def async_step_manage_reactions(self, user_input=None):
+        """Manage reactions menu."""
+        return self.async_show_menu(
+            step_id="manage_reactions",
+            menu_options=[
+                "add_reaction",
+                "pick_reaction_for_edit",
+                "pick_reaction_for_delete",
+                "select_reaction_template",
+                "init"
+            ]
+        )
+
+    async def async_step_add_reaction(self, user_input=None):
+        self.options_data = {}
+        self.edit_reaction_index = None  # Resetujemy indeks edycji
         return await self.async_step_reactions_scope()
+
+    async def async_step_pick_reaction_for_edit(self, user_input=None):
+        """Pick reaction to edit."""
+        return await async_step_pick_reaction_for_edit(self, user_input)
+
+    async def async_step_pick_reaction_for_delete(self, user_input=None):
+        """Pick reaction to delete."""
+        return await async_step_pick_reaction_for_delete(self, user_input)
+    
+    async def async_step_delete_reaction_action(self, user_input=None):
+        """Confirm reaction deletion."""
+        from .reactions.flows.flows_reactions import async_step_delete_reaction_action
+        return await async_step_delete_reaction_action(self, user_input)    
+
+    async def async_step_select_reaction_template(self, user_input=None):
+        """Select reaction template."""
+        return await async_step_select_reaction_template(self, user_input)
+
+    async def async_step_reaction_template_cinema(self, user_input=None):
+        """Cinema reaction template."""
+        return await async_step_reaction_template_cinema(self, user_input)
 
     async def async_step_reactions_scope(self, user_input=None):
         """Configure reaction scope (areas)."""

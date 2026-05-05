@@ -66,14 +66,52 @@
       "invalid_weight": "Waga musi być w zakresie 0-100."
     },
     "step": {
-      "init": {
-        "title": "Zarządzanie trybem",
-        "menu_options": {
-          "edit_settings": "Edytuj ustawienia",
-          "manage_sources": "Zarządzaj źródłami",
-          "select_template": "Zastosuj szablon"
-        }
-      },
+       "init": {
+         "title": "Zarządzanie trybem",
+         "menu_options": {
+           "edit_settings": "Edytuj ustawienia",
+           "manage_sources": "Zarządzaj źródłami",
+           "manage_reactions": "Zarządzaj reakcjami",
+           "select_template": "Zastosuj szablon"
+         }
+       },
+       "manage_reactions": {
+         "title": "Reakcje",
+         "menu_options": {
+           "add_reaction": "Dodaj reakcję",
+           "pick_reaction_for_edit": "Edytuj reakcję",
+           "pick_reaction_for_delete": "Usuń reakcję",
+           "select_reaction_template": "Zastosuj szablon",
+           "init": "Wstecz"
+         }
+       },
+       "pick_reaction_for_edit": {
+         "title": "Wybierz reakcję do edycji",
+         "data": {
+           "selected_reaction": "Reakcja"
+         }
+       },
+       "pick_reaction_for_delete": {
+         "title": "Wybierz reakcję do usunięcia",
+         "data": {
+           "selected_reaction": "Reakcja"
+         }
+       },
+       "select_reaction_template": {
+         "title": "Wybierz szablon reakcji",
+         "description": "Wybranie szablonu zastosuje predefiniowaną konfigurację.",
+         "menu_options": {
+           "reaction_template_cinema": "Kino",
+           "manage_reactions": "Wstecz"
+         }
+       },
+       "reaction_template_cinema": {
+         "title": "Szablon: Kino",
+         "description": "Wyłącz adaptacyjne oświetlenie i śledzenie obecności w pokoju kinowym.",
+         "data": {
+           "areas": "Strefy"
+         }
+       },
       "edit_settings": {
         "title": "Edytuj ustawienia",
         "data": {
@@ -231,8 +269,50 @@
           "children_entities": "Dzieci",
           "parent_entities": "Rodzice"
         }
-      }
-    },
+       },
+       "init_router": {
+         "title": "Konfiguracja reakcji",
+         "data": {
+           "config_type": "Co chcesz skonfigurować?"
+         }
+       },
+    "reactions_start": {
+         "title": "Zarządzaj reakcjami",
+         "menu_options": {
+           "step_scope": "Zakres reakcji",
+           "init": "Wstecz"
+         }
+       },
+        "reactions_scope": {
+         "title": "Zakres reakcji",
+         "description": "Wybierz strefy, gdzie ta reakcja ma zastosowanie",
+         "data": {
+           "areas": "Strefy"
+         }
+       },
+       "reactions_lighting": {
+         "title": "Oświetlenie",
+         "description": "Czy chcesz zmodyfikować oświetlenie adaptacyjne dla tego trybu?",
+         "data": {
+           "adaptive_lighting_mode": "Zachowanie Adaptive Lighting",
+           "fallback_scene": "Scena do włączenia (opcjonalnie)"
+         }
+       },
+       "reactions_restore": {
+         "title": "Zakończenie trybu",
+         "description": "Co powinno się dziać po zakończeniu tego trybu?",
+         "data": {
+           "restore_action": "Akcja po wyłączeniu trybu"
+         }
+       },
+       "delete_reaction_action": {
+         "title": "Potwierdzenie usunięcia",
+         "description": "Czy na pewno chcesz usunąć tę reakcję:\n{reaction}?",
+         "data": {
+           "confirm": "Tak, usuń"
+         }
+       }
+     },    
     "abort": {
       "engine_no_options": "Silnik nie ma opcji.",
       "not_implemented_yet": "Ta funkcja nie jest jeszcze zaimplementowana.",
