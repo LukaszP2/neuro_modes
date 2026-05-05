@@ -2,19 +2,13 @@
   "title": "Neuro Modes",
   "entity": {
     "sensor": {
-      "confidence": {
-        "name": "Pewność"
-      }
+      "confidence": { "name": "Pewność" }
     },
     "switch": {
-      "state": {
-        "name": "Stan"
-      }
+      "state": { "name": "Stan" }
     },
     "select": {
-      "home_mode": {
-        "name": "Tryb domu"
-      }
+      "home_mode": { "name": "Tryb domu" }
     }
   },
   "config": {
@@ -29,9 +23,7 @@
       },
       "setup_engine": {
         "title": "Konfiguracja silnika",
-        "data": {
-          "install_defaults": "Utwórz domyślne tryby startowe"
-        }
+        "data": { "install_defaults": "Utwórz domyślne tryby startowe" }
       },
       "setup_mode": {
         "title": "Nowy tryb bazowy",
@@ -39,7 +31,7 @@
           "name": "Nazwa trybu",
           "threshold": "Próg aktywacji (0-100)",
           "delta": "Delta wyłączenia (histereza)",
-          "override_timeout": "Timeout ręcznego nadpisania (min)",
+          "override_timeout": "Timeout nadpisania (min)",
           "initial_template": "Szablon początkowy"
         }
       },
@@ -49,7 +41,7 @@
           "name": "Nazwa modyfikatora",
           "threshold": "Próg aktywacji (0-100)",
           "delta": "Delta wyłączenia",
-          "override_timeout": "Timeout ręcznego nadpisania (min)",
+          "override_timeout": "Timeout nadpisania (min)",
           "initial_template": "Szablon początkowy"
         }
       }
@@ -66,52 +58,51 @@
       "invalid_weight": "Waga musi być w zakresie 0-100."
     },
     "step": {
-       "init": {
-         "title": "Zarządzanie trybem",
-         "menu_options": {
-           "edit_settings": "Edytuj ustawienia",
-           "manage_sources": "Zarządzaj źródłami",
-           "manage_reactions": "Zarządzaj reakcjami",
-           "select_template": "Zastosuj szablon"
-         }
-       },
-       "manage_reactions": {
-         "title": "Reakcje",
-         "menu_options": {
-           "add_reaction": "Dodaj reakcję",
-           "pick_reaction_for_edit": "Edytuj reakcję",
-           "pick_reaction_for_delete": "Usuń reakcję",
-           "select_reaction_template": "Zastosuj szablon",
-           "init": "Wstecz"
-         }
-       },
-       "pick_reaction_for_edit": {
-         "title": "Wybierz reakcję do edycji",
-         "data": {
-           "selected_reaction": "Reakcja"
-         }
-       },
-       "pick_reaction_for_delete": {
-         "title": "Wybierz reakcję do usunięcia",
-         "data": {
-           "selected_reaction": "Reakcja"
-         }
-       },
-       "select_reaction_template": {
-         "title": "Wybierz szablon reakcji",
-         "description": "Wybranie szablonu zastosuje predefiniowaną konfigurację.",
-         "menu_options": {
-           "reaction_template_cinema": "Kino",
-           "manage_reactions": "Wstecz"
-         }
-       },
-       "reaction_template_cinema": {
-         "title": "Szablon: Kino",
-         "description": "Wyłącz adaptacyjne oświetlenie i śledzenie obecności w pokoju kinowym.",
-         "data": {
-           "areas": "Strefy"
-         }
-       },
+      "init": {
+        "title": "Zarządzanie trybem",
+        "menu_options": {
+          "edit_settings": "Edytuj ustawienia",
+          "manage_sources": "Zarządzaj źródłami",
+          "manage_reactions": "Zarządzaj reakcjami",
+          "select_template": "Zastosuj szablon"
+        }
+      },
+      "manage_reactions": {
+        "title": "Reakcje",
+        "menu_options": {
+          "add_reaction": "Dodaj reakcję",
+          "pick_reaction_for_edit": "Edytuj reakcję",
+          "pick_reaction_for_delete": "Usuń reakcję",
+          "select_reaction_template": "Zastosuj szablon",
+          "init": "Wstecz"
+        }
+      },
+      "pick_reaction_for_edit": {
+        "title": "Wybierz reakcję do edycji",
+        "data": { "selected_reaction": "Reakcja" }
+      },
+      "pick_reaction_for_delete": {
+        "title": "Wybierz reakcję do usunięcia",
+        "data": { "selected_reaction": "Reakcja" }
+      },
+      "delete_reaction_action": {
+        "title": "Potwierdzenie usunięcia",
+        "description": "Czy na pewno chcesz usunąć tę reakcję:\n\n**{reaction}**?",
+        "data": { "confirm": "Tak, usuń" }
+      },
+      "select_reaction_template": {
+        "title": "Wybierz szablon reakcji",
+        "description": "Wybranie szablonu zastosuje predefiniowaną konfigurację.",
+        "menu_options": {
+          "reaction_template_cinema": "Kino",
+          "manage_reactions": "Wstecz"
+        }
+      },
+      "reaction_template_cinema": {
+        "title": "Szablon: Kino",
+        "description": "Wyłącz adaptacyjne oświetlenie i śledzenie obecności w pokoju kinowym.",
+        "data": { "areas": "Strefy" }
+      },
       "edit_settings": {
         "title": "Edytuj ustawienia",
         "data": {
@@ -132,15 +123,11 @@
       },
       "pick_source_for_edit": {
         "title": "Wybierz źródło do edycji",
-        "data": {
-          "selected_source": "Źródło"
-        }
+        "data": { "selected_source": "Źródło" }
       },
       "pick_source_for_delete": {
         "title": "Wybierz źródło do usunięcia",
-        "data": {
-          "selected_source": "Źródło"
-        }
+        "data": { "selected_source": "Źródło" }
       },
       "add_source": {
         "title": "Dodaj źródło",
@@ -161,9 +148,7 @@
       "edit_source_menu": {
         "title": "Zarządzaj źródłem",
         "description": "Wybrane źródło: {source}",
-        "data": {
-          "action": "Akcja"
-        },
+        "data": { "action": "Akcja" },
         "menu_options": {
           "edit_source_form": "Edytuj stan i wagę",
           "delete_source_action": "Usuń źródło",
@@ -173,9 +158,7 @@
       "delete_source_action": {
         "title": "Potwierdzenie usunięcia",
         "description": "Czy chcesz usunąć źródło: {source}?",
-        "data": {
-          "confirm": "Potwierdź"
-        }
+        "data": { "confirm": "Potwierdź" }
       },
       "select_template": {
         "title": "Wybierz szablon",
@@ -195,15 +178,11 @@
       },
       "template_home": {
         "title": "Szablon: Dom",
-        "data": {
-          "home_zone": "Strefa domu"
-        }
+        "data": { "home_zone": "Strefa domu" }
       },
       "template_away": {
         "title": "Szablon: Poza domem",
-        "data": {
-          "home_zone": "Strefa domu"
-        }
+        "data": { "home_zone": "Strefa domu" }
       },
       "template_night": {
         "title": "Szablon: Noc",
@@ -221,9 +200,7 @@
       },
       "template_alarm": {
         "title": "Szablon: Alarm",
-        "data": {
-          "alarm_entity": "Panel alarmowy"
-        }
+        "data": { "alarm_entity": "Panel alarmowy" }
       },
       "template_work": {
         "title": "Szablon: Praca z domu",
@@ -242,8 +219,8 @@
         "description": "Skonfiguruj parametry wykrywania pracy z domu.\n\n💡 **Uwaga:** Nie wykryto integracji 'Workday'. Wiele funkcji tego trybu jest niedostępnych. Zainstaluj oficjalną integrację Workday w Home Assistant, a następnie skonfiguruj ten tryb ponownie.",
         "data": {
           "workers": "Kto pracuje z domu?",
-          "activity_sensors": "Sensory aktywności (np. zużycie PC, status Teams)",
-          "disruptors": "Kto blokuje ten tryb? (np. obecność dzieci)",
+          "activity_sensors": "Sensory aktywności",
+          "disruptors": "Kto blokuje ten tryb?",
           "work_start_time": "Najwcześniejsza godzina rozpoczęcia pracy",
           "work_end_time": "Najpóźniejsza godzina zakończenia pracy"
         }
@@ -269,50 +246,37 @@
           "children_entities": "Dzieci",
           "parent_entities": "Rodzice"
         }
-       },
-       "init_router": {
-         "title": "Konfiguracja reakcji",
-         "data": {
-           "config_type": "Co chcesz skonfigurować?"
-         }
-       },
-    "reactions_start": {
-         "title": "Zarządzaj reakcjami",
-         "menu_options": {
-           "step_scope": "Zakres reakcji",
-           "init": "Wstecz"
-         }
-       },
-        "reactions_scope": {
-         "title": "Zakres reakcji",
-         "description": "Wybierz strefy, gdzie ta reakcja ma zastosowanie",
-         "data": {
-           "areas": "Strefy"
-         }
-       },
-       "reactions_lighting": {
-         "title": "Oświetlenie",
-         "description": "Czy chcesz zmodyfikować oświetlenie adaptacyjne dla tego trybu?",
-         "data": {
-           "adaptive_lighting_mode": "Zachowanie Adaptive Lighting",
-           "fallback_scene": "Scena do włączenia (opcjonalnie)"
-         }
-       },
-       "reactions_restore": {
-         "title": "Zakończenie trybu",
-         "description": "Co powinno się dziać po zakończeniu tego trybu?",
-         "data": {
-           "restore_action": "Akcja po wyłączeniu trybu"
-         }
-       },
-       "delete_reaction_action": {
-         "title": "Potwierdzenie usunięcia",
-         "description": "Czy na pewno chcesz usunąć tę reakcję:\n{reaction}?",
-         "data": {
-           "confirm": "Tak, usuń"
-         }
-       }
-     },    
+      },
+      "init_router": {
+        "title": "Konfiguracja reakcji",
+        "data": { "config_type": "Co chcesz skonfigurować?" }
+      },
+      "reactions_start": {
+        "title": "Zarządzaj reakcjami",
+        "menu_options": {
+          "step_scope": "Zakres reakcji",
+          "init": "Wstecz"
+        }
+      },
+      "reactions_scope": {
+        "title": "Zakres reakcji",
+        "description": "Wybierz strefy, gdzie ta reakcja ma zastosowanie",
+        "data": { "areas": "Strefy" }
+      },
+      "reactions_lighting": {
+        "title": "Oświetlenie adaptacyjne",
+        "description": "Czy chcesz włączyć oświetlenie adaptacyjne dla tego trybu?",
+        "data": {
+          "adaptive_lighting_mode": "Tryb oświetlenia adaptacyjnego",
+          "fallback_scene": "Scena zapasowa (opcjonalna)"
+        }
+      },
+      "reactions_restore": {
+        "title": "Przywracanie zachowania",
+        "description": "Co powinno się dziać po zakończeniu tego trybu?",
+        "data": { "restore_action": "Akcja przywracania" }
+      }
+    },
     "abort": {
       "engine_no_options": "Silnik nie ma opcji.",
       "not_implemented_yet": "Ta funkcja nie jest jeszcze zaimplementowana.",
