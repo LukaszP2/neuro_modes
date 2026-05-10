@@ -16,8 +16,8 @@ class MagicAreasAdapter:
         for area_id in area_ids:
             try:
                 # 1. Automatyczny Tryb Nocny (Synchronizacja z NM)
-                if mode_name.lower() in ["noc", "night", "nocny"]:
-                    night_switch = self.discovery.find_integration_switch(area_id, "magic_areas", "night_mode")
+                if any(kw in mode_name.lower() for kw in ["noc", "night", "nocny"]):
+                    night_switch = self.discovery.find_integration_switch(area_id, "magic_areas", "sleep_mode")
                     if night_switch:
                         await self.hass.services.async_call("switch", "turn_on", {"entity_id": night_switch})
                         _LOGGER.debug("MA: Synchronizacja trybu nocnego dla obszaru '%s'", area_id)
@@ -36,8 +36,8 @@ class MagicAreasAdapter:
     async def restore(self, area_ids: list[str], restore_action: str, mode_name: str) -> None:
         for area_id in area_ids:
             try:
-                if mode_name.lower() in ["noc", "night", "nocny"]:
-                    night_switch = self.discovery.find_integration_switch(area_id, "magic_areas", "night_mode")
+                if any(kw in mode_name.lower() for kw in ["noc", "night", "nocny"]):
+                    night_switch = self.discovery.find_integration_switch(area_id, "magic_areas", "sleep_mode")
                     if night_switch:
                         await self.hass.services.async_call("switch", "turn_off", {"entity_id": night_switch})
 
