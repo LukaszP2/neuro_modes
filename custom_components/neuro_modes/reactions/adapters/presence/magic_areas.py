@@ -1,41 +1,49 @@
-"""Magic Areas adapter - controls presence tracking per area with Smart Search."""
+"""Magic Areas adapter with Smart Discovery."""
 import logging
 from typing import Any
+from custom_components.neuro_modes.reactions.discovery import AreaDiscovery
 
 _LOGGER = logging.getLogger(__name__)
 
 class MagicAreasAdapter:
-    """Adapter for Magic Areas integration."""
-
+    """Adapter obsługujący Magic Areas na podstawie Area Registry."""
+    
     def __init__(self, hass):
         self.hass = hass
+        self.discovery = AreaDiscovery(hass)
 
-    def _find_entity(self, area_id: str) -> str | None:
-        """Inteligentne wyszukiwanie encji MA (light_control)."""
-        all_switches = self.hass.states.async_entity_ids("switch")
-        
-        for entity_id in all_switches:
-            if area_id in entity_id and "light_control" in entity_id:
-                return entity_id
-        return None
-
-    async def apply_state(self, area_ids: list[str], mode_config: dict[str, Any]) -> None:
+    async def apply_state(self, area_ids: list[str], mode_config: dict[str, Any], mode_name: str) -> None:
         for area_id in area_ids:
             try:
-                entity = self._find_entity(area_id)
-                # Blokujemy auto-światło tylko gdy kazano nam wyłączyć AL
-                if entity and mode_config.get("adaptive_lighting_mode") == "disable":
-                    await self.hass.services.async_call("switch", "turn_off", {"entity_id": entity})
-                    _LOGGER.debug("Magic Areas: Auto-światło zablokowane dla %s (%s)", area_id, entity)
-            except Exception as err:
-                _LOGGER.debug("Błąd MA adaptera dla %s: %s", area_id, err)
+                # 1. Automatyczny Tryb Nocny (Synchronizacja z NM)
+                if mode_name.lower() in ["noc", "night", "nocny"]:
+                    night_switch = self.discovery.find_integration_switch(area_id, "magic_areas", "night_mode")
+                    if night_switch:
+                        await self.hass.services.async_call("switch", "turn_on", {"entity_id": night_switch})
+                        _LOGGER.debug("MA: Synchronizacja trybu nocnego dla obszaru '%s'", area_id)
 
-    async def restore(self, area_ids: list[str], restore_action: str) -> None:
+                # 2. Blokowanie Auto-światła (np. dla Trybu Filmowego)
+                block_lights = mode_config.get("adaptive_lighting_mode") == "disable"
+                if block_lights:
+                    light_control = self.discovery.find_integration_switch(area_id, "magic_areas", "light_control")
+                    if light_control:
+                        await self.hass.services.async_call("switch", "turn_off", {"entity_id": light_control})
+                        _LOGGER.debug("MA: Zablokowano wyzwalacz światła dla obszaru '%s'", area_id)
+
+            except Exception as err:
+                _LOGGER.warning("MA Adapter Error dla '%s': %s", area_id, err)
+
+    async def restore(self, area_ids: list[str], restore_action: str, mode_name: str) -> None:
         for area_id in area_ids:
             try:
-                entity = self._find_entity(area_id)
-                if entity:
-                    await self.hass.services.async_call("switch", "turn_on", {"entity_id": entity})
-                    _LOGGER.debug("Magic Areas: Auto-światło przywrócone dla %s (%s)", area_id, entity)
+                if mode_name.lower() in ["noc", "night", "nocny"]:
+                    night_switch = self.discovery.find_integration_switch(area_id, "magic_areas", "night_mode")
+                    if night_switch:
+                        await self.hass.services.async_call("switch", "turn_off", {"entity_id": night_switch})
+
+                light_control = self.discovery.find_integration_switch(area_id, "magic_areas", "light_control")
+                if light_control:
+                    await self.hass.services.async_call("switch", "turn_on", {"entity_id": light_control})
+
             except Exception as err:
-                _LOGGER.debug("Błąd MA adaptera przywracania %s: %s", area_id, err)
+                _LOGGER.warning("MA Restore Error dla '%s': %s", area_id, err)

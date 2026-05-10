@@ -49,10 +49,16 @@ class NeuroConfidence(CoordinatorEntity, SensorEntity):
     
     @property
     def extra_state_attributes(self):
-        """Zwraca dodatkowe atrybuty encji."""
-        # Pobieramy dane z naszego koordynatora
-        data = self.coordinator.data if self.coordinator.data else {}
+        """Zwraca dane diagnostyczne prosto z silnika Neuro."""
+        # Pobieramy stan z Engine przez koordynator
+        mode_data = self.coordinator.engine.states.get(self.coordinator.mode_name, {})
+        
+        # Bezpiecznie pobieramy próg z konfiguracji (domyślnie 50, jeśli nie ustawiono)
+        mode_threshold = self.coordinator.config_entry.options.get("activation_threshold", 50)
+        
         return {
-            "active_sources": data.get("active", []),
-            "human_override": data.get("human_override", False)
-        }    
+            "confidence": mode_data.get("confidence", 0),
+            "active_sources": mode_data.get("active", []),
+            "human_override": mode_data.get("human_override", False),
+            "threshold": mode_threshold
+        }

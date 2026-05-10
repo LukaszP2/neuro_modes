@@ -44,6 +44,7 @@ class NeuroModesCoordinator(DataUpdateCoordinator[dict]):
         """Obsługa kliknięcia z czasem wygasania."""
         _LOGGER.debug("Manual override set for mode=%s value=%s", self.mode_name, is_on)
         self.engine.set_manual_override(self.mode_name, is_on)
+        self.hass.async_create_task(self.reactor.async_react(is_on))
         self.async_set_updated_data(self._current_state())
 
         # Ustawiamy stoper, jeśli zdefiniowano w opcjach czas > 0

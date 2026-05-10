@@ -1,66 +1,62 @@
-"""NeuroReactor - central dispatcher for reactions with Scope Override logic."""
+"""Core Neuro Reactor - The Engine."""
 import logging
-from typing import Any
 from homeassistant.core import HomeAssistant
-
-# Importujemy nasze adaptery
 from .adapters.lighting.adaptive_lighting import AdaptiveLightingAdapter
 from .adapters.presence.magic_areas import MagicAreasAdapter
 
 _LOGGER = logging.getLogger(__name__)
 
 class NeuroReactor:
-    """Central dispatcher for reactions."""
-
-    def __init__(self, hass: HomeAssistant, entry):
-        """Inicjalizacja reaktora dla danego trybu."""
+    """Mózg wykonawczy Neuro Modes - deleguje zadania do adapterów."""
+    
+    def __init__(self, hass: HomeAssistant, config_entry):
         self.hass = hass
-        self.entry = entry
+        self.config_entry = config_entry
+        self.options = config_entry.options
         
-        # Inicjalizacja "rąk" wykonawczych
-        self.lighting_adapter = AdaptiveLightingAdapter(hass)
-        self.presence_adapter = MagicAreasAdapter(hass)
+        # Wczytanie wtyczek (Adapterów)
+        self.ma_adapter = MagicAreasAdapter(hass)
+        self.al_adapter = AdaptiveLightingAdapter(hass)
         
-        # Pamiętamy poprzedni stan, żeby nie strzelać komendami co 30 sekund bez potrzeby
         self._was_active = False
 
     async def async_react(self, is_active: bool) -> None:
-        """Główna funkcja wywoływana przez Koordynator przy każdej aktualizacji."""
-        # Jeśli stan się nie zmienił, nie robimy nic
+        """Główny punkt wejścia. Uruchamiany, gdy koordynator zmienia stan trybu."""
         if is_active == self._was_active:
-            return
-
+            return  # Zabezpieczenie przed podwójnym odpaleniem (Idempotentność)
+        
         self._was_active = is_active
-        reactions_config = list(self.entry.options.get("reactions", []))
-
-        if not reactions_config:
-            return # Tryb nie ma ustawionych żadnych reakcji
-
+        mode_name = self.config_entry.title
+        reactions_config = self.options.get("reactions", [])
+        
         if is_active:
-            _LOGGER.info("NeuroReactor: Tryb '%s' WŁĄCZONY. Aplikuję %s reakcji.", self.entry.title, len(reactions_config))
-            await self._apply_reactions(reactions_config)
+            _LOGGER.info("🧠 NeuroReactor: Start wykonywania reakcji dla '%s'", mode_name)
+            for reaction in reactions_config:
+                areas = reaction.get("areas", [])
+                if not areas:
+                    continue
+                    
+                # 1. Odpalamy Magic Areas
+                await self.ma_adapter.apply_state(areas, reaction, mode_name)
+                
+                # 2. Odpalamy Adaptive Lighting
+                await self.al_adapter.apply_state(areas, reaction, mode_name)
+                
+                # 3. Opcjonalne uruchomienie fizycznej Sceny (Zawsze na końcu)
+                fallback_scene = reaction.get("fallback_scene")
+                if fallback_scene:
+                    await self.hass.services.async_call("scene", "turn_on", {"entity_id": fallback_scene})
+                    _LOGGER.debug("🎬 Wywołano scenę: %s", fallback_scene)
+                    
         else:
-            _LOGGER.info("NeuroReactor: Tryb '%s' WYŁĄCZONY. Przywracam stany.", self.entry.title)
-            await self._restore_reactions(reactions_config)
-
-    async def _apply_reactions(self, reactions: list[dict[str, Any]]) -> None:
-        """Aplikuje maski dla wszystkich zdefiniowanych reakcji."""
-        for reaction in reactions:
-            areas = reaction.get("areas", [])
-            if not areas:
-                continue
-            
-            # Odpalamy adaptery dla wybranych stref
-            await self.lighting_adapter.apply_state(areas, reaction)
-            await self.presence_adapter.apply_state(areas, reaction)
-
-    async def _restore_reactions(self, reactions: list[dict[str, Any]]) -> None:
-        """Cofa zmiany (przywraca tło) po zakończeniu trybu."""
-        for reaction in reactions:
-            areas = reaction.get("areas", [])
-            restore_action = reaction.get("restore_action", "restore_previous")
-            if not areas:
-                continue
-            
-            await self.lighting_adapter.restore(areas, restore_action)
-            await self.presence_adapter.restore(areas, restore_action)
+            _LOGGER.info("🧠 NeuroReactor: Wygaszanie reakcji i przywracanie domu dla '%s'", mode_name)
+            for reaction in reactions_config:
+                areas = reaction.get("areas", [])
+                if not areas:
+                    continue
+                    
+                restore_action = reaction.get("restore_action", "restore_previous")
+                
+                # Przywracamy systemy do domyślnego stanu
+                await self.ma_adapter.restore(areas, restore_action, mode_name)
+                await self.al_adapter.restore(areas, restore_action, mode_name)
